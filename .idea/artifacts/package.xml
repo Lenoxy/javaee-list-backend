@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="package">
+    <output-path>$PROJECT_DIR$/out/artifacts/package</output-path>
+    <root id="archive" name="package.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="javaee-list-backend" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  openliberty:
+    container_name: list-backend
+    image: 3ebeb9941017
+    ports:
+    - 8080:9080
+    #volumes:
+    #- ./out/artifacts/package/package.war:/config/apps/package.war
+    #- ./src/main/liberty/config/server.xml:/config/server.xml
+
