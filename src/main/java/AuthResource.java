@@ -1,3 +1,5 @@
+import entity.User;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
@@ -5,7 +7,9 @@ import javax.ws.rs.Path;
 public class AuthResource{
     @GET
     @Path("")
-    public String getProperties(){
+    public String getAuth(){
+
+
         return "Hello auth";
     }
 

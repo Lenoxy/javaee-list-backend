@@ -3,10 +3,25 @@ version: '3'
 services:
   openliberty:
     container_name: list-backend
-    image: 3ebeb9941017
+    image: aca0d5f9274a
     ports:
     - 8080:9080
     #volumes:
     #- ./out/artifacts/package/package.war:/config/apps/package.war
     #- ./src/main/liberty/config/server.xml:/config/server.xml
+    networks:
+      - backend
+  postgres:
+    container_name: list-database
+    image: postgres:13.2
+    environment:
+      DB_NAME: postgres
+      POSTGRES_USER: list
+      POSTGRES_PASSWORD: eq7uC37qkQASSLcc
+    ports:
+    - 5432:5432 # Remove in Prod
+    networks:
+      - backend
 
+networks:
+  backend:
