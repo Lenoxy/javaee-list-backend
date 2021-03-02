@@ -1,16 +1,10 @@
-import entity.User;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
-import java.util.List;
 
 @ApplicationPath("")
 public class RestApplication extends Application{
-    public static void main(String[] args) {
-        System.out.println("main calledbui");
+    /*
+        System.out.println("main called");
 
         try {
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpa-unit");
@@ -23,4 +17,5 @@ public class RestApplication extends Application{
             System.out.println(e.getMessage());
         }
     }
+    */
 }

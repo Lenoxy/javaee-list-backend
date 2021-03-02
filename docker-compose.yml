@@ -3,7 +3,7 @@ version: '3'
 services:
   openliberty:
     container_name: list-backend
-    image: aca0d5f9274a
+    build: .
     ports:
     - 8080:9080
     #volumes:
