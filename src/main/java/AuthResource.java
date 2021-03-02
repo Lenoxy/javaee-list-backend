@@ -15,9 +15,11 @@ public class AuthResource{
         return "Hello auth";
     }
 
+    @GET
     @Path("/test")
     public String test(){
-        return database.get();
+        //System.out.println(database.getName());
+        return database.getName();
     }
 
 }
