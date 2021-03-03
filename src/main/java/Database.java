@@ -1,18 +1,27 @@
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 
 @Dependent
 public class Database{
-    public Database(){
-        //System.err.println("Hi from init in class: " + this.getClass().getName() + ".construct()");
-    }
+
+    public EntityManager entityManager;
 
     @PostConstruct
     public void init(){
-        //System.err.println("Hi from init in class: " + this.getClass().getName() + ".init()");
+        System.out.println("init db called");
+        try{
+            entityManager = Persistence.createEntityManagerFactory("list").createEntityManager();
+
+            entityManager.createNativeQuery("INSERT INTO Benutzer (username, plainPassword) VALUES ('lenoxy','yyy')");
+
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     public String getName(){
-        return "Hi from the db service";
+        return "Hi from the db";
     }
 }

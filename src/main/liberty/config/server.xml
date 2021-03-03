@@ -11,4 +11,12 @@
                   id="defaultHttpEndpoint" host="*" />
 
     <webApplication location="api.war" contextRoot="${app.context.root}"/>
+
+    <!-- Datasource Configuration -->
+    <dataSource id="list"
+                jndiName="jdbc/list">
+        <jdbcDriver libraryRef="derbyJDBCLib" />
+        <properties.derby.embedded databaseName="list" createDatabase="create"/>
+    </dataSource>
+
 </server>

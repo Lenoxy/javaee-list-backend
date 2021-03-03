@@ -6,6 +6,8 @@ services:
     build: .
     ports:
     - 8080:9080
+    depends_on:
+      - postgres
     #volumes:
     #- ./out/artifacts/package/package.war:/config/apps/package.war
     #- ./src/main/liberty/config/server.xml:/config/server.xml

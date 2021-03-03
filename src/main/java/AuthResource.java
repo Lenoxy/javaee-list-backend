@@ -1,3 +1,5 @@
+import entity.User;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.GET;
@@ -18,8 +20,8 @@ public class AuthResource{
     @GET
     @Path("/test")
     public String test(){
-        //System.out.println(database.getName());
-        return database.getName();
+        User u = (User) database.entityManager.createNativeQuery("SELECT  * FROM Benutzer").getSingleResult();
+        return u.getUsername();
     }
 
 }
