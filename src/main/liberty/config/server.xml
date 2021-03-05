@@ -10,7 +10,7 @@
     <httpEndpoint httpPort="9080" httpsPort="9443"
                   id="defaultHttpEndpoint" host="*"/>
 
-    <webApplication location="api.war" contextRoot="api"/>
+    <webApplication location="api.war" name="list-api" contextRoot="api"/>
 
     <dataSource id="list-db" jndiName="jdbc/list-db">
         <jdbcDriver java.sql.Driver="org.postgresql.Driver">
