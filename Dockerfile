@@ -7,7 +7,9 @@ COPY --chown=1001:0  src/main/liberty/config/server.xml /config/
 # A sample is in the 'Getting Required Features' section below
 
 # Add app
-COPY --chown=1001:0  out/artifacts/package/package.war /config/dropins/api.war
+COPY --chown=1001:0  target/api.war /config/dropins/api.war
+
+COPY --chown=1001:0 target/liberty/wlp/usr/shared/resources/jdbc/postgresql-42.2.19.jar /usr/shared/resources/jdbc/postgresql-42.2.19.jar
 
 # This script will add the requested server configurations, apply any interim fixes and populate caches to optimize runtime
 RUN configure.sh

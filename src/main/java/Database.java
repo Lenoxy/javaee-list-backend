@@ -14,7 +14,7 @@ public class Database{
         try{
             entityManager = Persistence.createEntityManagerFactory("list-db").createEntityManager();
 
-            entityManager.createNativeQuery("INSERT INTO Benutzer (username, plainPassword) VALUES ('lenoxy','yyyyd')");
+            entityManager.createNativeQuery("INSERT INTO Benutzer (username, plainPassword) VALUES ('fdsfsdddfs','yyyyd')");
 
         }catch(Exception e){
             System.out.println(e.getMessage());

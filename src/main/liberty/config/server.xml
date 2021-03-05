@@ -13,14 +13,17 @@
     <webApplication location="api.war" contextRoot="api"/>
 
     <dataSource id="list-db" jndiName="jdbc/list-db">
-        <jdbcDriver java.sql.Driver="org.postgresql.Driver"/>
+        <jdbcDriver java.sql.Driver="org.postgresql.Driver">
+            <library name="pjbdc">
+                <fileset dir="/usr/shared/resources/jdbc" includes="postgresql-42.2.19.jar"/>
+            </library>
+        </jdbcDriver>
         <properties serverName="list-database"
                     portNumber="5432"
                     databaseName="list"
                     user="list"
                     password="eq7uC37qkQASSLcc"
         />
-
     </dataSource>
 
 </server>
