@@ -20,7 +20,7 @@ public class AuthResource{
     @GET
     @Path("/test")
     public String test(){
-        User u = (User) database.entityManager.createNativeQuery("SELECT  * FROM Benutzer").getSingleResult();
+        User u = (User) database.entityManager.createNativeQuery("SELECT * FROM Benutzer").getSingleResult();
         return u.getUsername();
     }
 

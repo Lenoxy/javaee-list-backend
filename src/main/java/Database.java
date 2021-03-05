@@ -12,9 +12,9 @@ public class Database{
     public void init(){
         System.out.println("init db called");
         try{
-            entityManager = Persistence.createEntityManagerFactory("list").createEntityManager();
+            entityManager = Persistence.createEntityManagerFactory("list-db").createEntityManager();
 
-            entityManager.createNativeQuery("INSERT INTO Benutzer (username, plainPassword) VALUES ('lenoxy','yyy')");
+            entityManager.createNativeQuery("INSERT INTO Benutzer (username, plainPassword) VALUES ('lenoxy','yyyyd')");
 
         }catch(Exception e){
             System.out.println(e.getMessage());

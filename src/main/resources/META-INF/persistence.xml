@@ -4,17 +4,13 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
                         http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
-    <persistence-unit name="list" transaction-type="JTA">
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-
-        <class>entity.User</class>
-
+    <persistence-unit name="list-db" transaction-type="JTA">
+        <jta-data-source>jdbc/list-db</jta-data-source>
         <properties>
-            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://list-database:5432/list" />
-            <property name="javax.persistence.jdbc.user" value="list" />
-            <property name="javax.persistence.jdbc.password" value="eq7uC37qkQASSLcc" />
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/list"/>
+            <property name="javax.persistence.jdbc.user" value="list"/>
+            <property name="javax.persistence.jdbc.password" value="eq7uC37qkQASSLcc"/>
         </properties>
-
     </persistence-unit>
 </persistence>

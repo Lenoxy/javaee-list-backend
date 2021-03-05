@@ -8,15 +8,19 @@
     </featureManager>
 
     <httpEndpoint httpPort="9080" httpsPort="9443"
-                  id="defaultHttpEndpoint" host="*" />
+                  id="defaultHttpEndpoint" host="*"/>
 
-    <webApplication location="api.war" contextRoot="${app.context.root}"/>
+    <webApplication location="api.war" contextRoot="api"/>
 
-    <!-- Datasource Configuration -->
-    <dataSource id="list"
-                jndiName="jdbc/list">
-        <jdbcDriver libraryRef="derbyJDBCLib" />
-        <properties.derby.embedded databaseName="list" createDatabase="create"/>
+    <dataSource id="list-db" jndiName="jdbc/list-db">
+        <jdbcDriver java.sql.Driver="org.postgresql.Driver"/>
+        <properties serverName="list-database"
+                    portNumber="5432"
+                    databaseName="list"
+                    user="list"
+                    password="eq7uC37qkQASSLcc"
+        />
+
     </dataSource>
 
 </server>
