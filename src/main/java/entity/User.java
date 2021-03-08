@@ -1,10 +1,9 @@
 package entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
-@Table(name = "Benutzer", schema="public")
+@Table(name = "benutzer")
 public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
