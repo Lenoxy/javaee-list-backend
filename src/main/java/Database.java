@@ -8,8 +8,7 @@ public class Database{
 
     public EntityManager entityManager;
 
-    @PostConstruct
-    public void init(){
+    public Database(){
         System.out.println("init db called");
         entityManager = Persistence.createEntityManagerFactory("list-db").createEntityManager();
     }

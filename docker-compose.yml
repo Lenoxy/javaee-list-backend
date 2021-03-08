@@ -16,6 +16,7 @@ services:
   postgres:
     container_name: list-database
     image: postgres:13.2
+    command: [ "postgres", "-c", "log_statement=all", "-c", "log_destination=stderr" ]
     environment:
       DB_NAME: postgres
       POSTGRES_USER: list
