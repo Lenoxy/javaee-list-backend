@@ -3,10 +3,10 @@ package entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "benutzer")
+@Table(name = "listUser")
 public class User {
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private int id;
 
@@ -21,18 +21,13 @@ public class User {
     public User(){
     }
 
-    public User(int id, String username, String plainPassword){
-        this.id = id;
+    public User(String username, String plainPassword){
         this.username = username;
         this.plainPassword = plainPassword;
     }
 
     public int getId(){
         return id;
-    }
-
-    public void setId(int id){
-        this.id = id;
     }
 
     public String getUsername(){

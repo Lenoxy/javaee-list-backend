@@ -11,17 +11,6 @@ public class Database{
     @PostConstruct
     public void init(){
         System.out.println("init db called");
-        try{
-            entityManager = Persistence.createEntityManagerFactory("list-db").createEntityManager();
-
-            entityManager.createNativeQuery("INSERT INTO Benutzer (username, plainPassword) VALUES ('fdsfsdddfs','yyyyd')");
-
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public String getName(){
-        return "Hi from the db";
+        entityManager = Persistence.createEntityManagerFactory("list-db").createEntityManager();
     }
 }
