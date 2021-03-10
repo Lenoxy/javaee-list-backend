@@ -3,10 +3,9 @@ import entity.User;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.transaction.Transactional;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Named
 @Path("/auth")
@@ -25,12 +24,12 @@ public class AuthResource{
         return "set";
     }
 
-    @GET
-    @Path("/insert/{username}/{password}")
+    @POST
+    @Path("/insert")
     @Transactional
     public String insert(
-            @PathParam("username") String username,
-            @PathParam("password") String password
+            @FormParam("username") String username,
+            @FormParam("password") String password
     ){
         User user = new User(username, password);
         database.entityManager.persist(user);
@@ -41,14 +40,15 @@ public class AuthResource{
     @Path("/select/{id}")
     public String selectById(@PathParam("id") int id){
         User u = database.entityManager.getReference(User.class, id);
-        return u.getUsername();
+        return u.toString();
     }
 
     @GET
     @Path("/select")
     public String select(){
         List<User> userList = database.entityManager.createQuery("SELECT u FROM User AS u").getResultList();
-        return userList.toString();
+        return userList.parallelStream().map(User::toString).collect(Collectors.toList()).toString();
+
     }
 
 }
