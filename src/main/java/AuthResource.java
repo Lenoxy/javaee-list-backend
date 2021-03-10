@@ -14,8 +14,6 @@ import java.util.List;
 @Named
 @Path("/auth")
 public class AuthResource{
-    @PersistenceContext
-    EntityManager entityManager; //= Persistence.createEntityManagerFactory("list-db").createEntityManager();
 
     // TODO Modify REST request types, currently GET for simplicity
 
@@ -24,21 +22,21 @@ public class AuthResource{
     @Transactional
     public String insert(){
         User user = new User("autogen", "testuser");
-        entityManager.persist(user);
+        Database.getInstance().entityManager.persist(user);
         return "set";
     }
 
     @GET
     @Path("/select/{id}")
     public String selectById(@PathParam("id") int id){
-        User u = entityManager.getReference(User.class, id);
+        User u = Database.getInstance().entityManager.getReference(User.class, id);
         return u.getUsername();
     }
 
     @GET
     @Path("/select")
     public String select(){
-        List<User> userList = entityManager.createQuery("SELECT u FROM User AS u").getResultList();
+        List<User> userList = Database.getInstance().entityManager.createQuery("SELECT u FROM User AS u").getResultList();
         return userList.toString();
     }
 
