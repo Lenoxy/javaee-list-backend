@@ -2,11 +2,7 @@ import entity.User;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import javax.transaction.UserTransaction;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -27,6 +23,18 @@ public class AuthResource{
         User user = new User("autogen", "testuser");
         database.entityManager.persist(user);
         return "set";
+    }
+
+    @GET
+    @Path("/insert/{username}/{password}")
+    @Transactional
+    public String insert(
+            @PathParam("username") String username,
+            @PathParam("password") String password
+    ){
+        User user = new User(username, password);
+        database.entityManager.persist(user);
+        return "done";
     }
 
     @GET
