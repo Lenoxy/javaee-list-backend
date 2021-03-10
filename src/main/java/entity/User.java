@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "listUser")
 public class User {
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private int id;
 
@@ -21,7 +21,7 @@ public class User {
     public User(){
     }
 
-    public User(int id, String username, String plainPassword){
+    public User(String username, String plainPassword){
         this.username = username;
         this.plainPassword = plainPassword;
     }
