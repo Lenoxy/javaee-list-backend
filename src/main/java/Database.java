@@ -1,25 +1,12 @@
-import javax.enterprise.context.Dependent;
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 
-@Dependent
+@Singleton
+@Startup
 public class Database{
-
-    private static Database instance;
     @PersistenceContext
     public EntityManager entityManager;
-
-    public Database(){
-        System.out.println("init db called");
-        entityManager = Persistence.createEntityManagerFactory("list-db").createEntityManager();
-    }
-
-    public static Database getInstance(){
-        if(instance == null){
-            instance = new Database();
-        }
-
-        return instance;
-    }
 }
