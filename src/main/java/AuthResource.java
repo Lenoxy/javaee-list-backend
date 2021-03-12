@@ -16,16 +16,17 @@ public class AuthResource{
     @GET
     @Path("/insert")
     @Transactional
-    public String insert(){
+    public String insertGenerated(){
         User user = new User("autogen", "testuser");
         database.entityManager.persist(user);
         return "set";
+
     }
 
     @POST
     @Path("/insert")
     @Transactional
-    public String insert(
+    public String insertCustom(
             @FormParam("username") String username,
             @FormParam("password") String password
     ){
