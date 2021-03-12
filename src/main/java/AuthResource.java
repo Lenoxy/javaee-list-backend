@@ -13,8 +13,6 @@ public class AuthResource{
     @Inject
     Database database;
 
-    // TODO Modify REST request types, currently GET for simplicity
-
     @GET
     @Path("/insert")
     @Transactional
@@ -47,7 +45,11 @@ public class AuthResource{
     @Path("/select")
     public String select(){
         List<User> userList = database.entityManager.createQuery("SELECT u FROM User AS u").getResultList();
-        return userList.parallelStream().map(User::toString).collect(Collectors.toList()).toString();
+        return userList
+                .parallelStream()
+                .map(User::toString)
+                .collect(Collectors.toList())
+                .toString();
 
     }
 
