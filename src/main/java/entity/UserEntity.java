@@ -40,19 +40,17 @@ public class UserEntity{
     }
 
     public void addListEntity(ListEntity listEntity){
-        if(this.listEntities == null){
-            this.listEntities = new ArrayList<ListEntity>();
-            System.out.println("arrayList created");
-        }
         this.listEntities.add(listEntity);
+        listEntity.setOwner(this);
     }
 
     @Override
-    public String toString(){
-        return "{" +
+    public String toString() {
+        return "UserEntity{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", plainPassword='" + plainPassword + '\'' +
+                ", listEntities=" + listEntities +
                 '}';
     }
 
