@@ -4,7 +4,7 @@ FROM openliberty/open-liberty:full-java11-openj9-ubi
 COPY --chown=1001:0 src/main/liberty/config/server.xml /config/
 
 
-# Currtently only used to enable debug mode
+# Used to enable debug mode
 COPY --chown=1001:0 jvm.options /config/jvm.options
 
 # Add app

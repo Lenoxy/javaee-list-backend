@@ -1,4 +1,5 @@
-import entity.User;
+import entity.ListEntity;
+import entity.UserEntity;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,10 +18,14 @@ public class AuthResource{
     @Path("/insert")
     @Transactional
     public String insertGenerated(){
-        User user = new User("autogen", "testuser");
-        database.entityManager.persist(user);
-        return "set";
+        UserEntity userEntity = new UserEntity();
 
+        userEntity.setUsername("autogen");
+        userEntity.setPlainPassword("testpass");
+        userEntity.addListEntity(new ListEntity());
+
+        database.entityManager.persist(userEntity);
+        return "set";
     }
 
     @POST
@@ -30,25 +35,25 @@ public class AuthResource{
             @FormParam("username") String username,
             @FormParam("password") String password
     ){
-        User user = new User(username, password);
-        database.entityManager.persist(user);
+        UserEntity userEntity = new UserEntity(username, password, null);
+        database.entityManager.persist(userEntity);
         return "done";
     }
 
     @GET
     @Path("/select/{id}")
     public String selectById(@PathParam("id") int id){
-        User u = database.entityManager.getReference(User.class, id);
+        UserEntity u = database.entityManager.getReference(UserEntity.class, id);
         return u.toString();
     }
 
     @GET
     @Path("/select")
     public String select(){
-        List<User> userList = database.entityManager.createQuery("SELECT u FROM User AS u").getResultList();
-        return userList
+        List<UserEntity> userEntityList = database.entityManager.createQuery("SELECT u FROM UserEntity AS u").getResultList();
+        return userEntityList
                 .parallelStream()
-                .map(User::toString)
+                .map(UserEntity::toString)
                 .collect(Collectors.toList())
                 .toString();
 

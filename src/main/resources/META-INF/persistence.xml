@@ -8,7 +8,8 @@
         <jta-data-source>jdbc/list-db</jta-data-source>
         <non-jta-data-source>jdbc/list-db-JPANJTA</non-jta-data-source>
 
-        <class>entity.User</class>
+        <class>entity.UserEntity</class>
+        <class>entity.ListEntity</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
