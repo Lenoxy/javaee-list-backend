@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+import entity.ItemEntity;
 import entity.ListEntity;
 import entity.UserEntity;
 
@@ -24,7 +26,13 @@ public class AuthResource {
         userEntity.setUsername("autogen-" + LocalDateTime.now());
         userEntity.setPlainPassword("testpass");
 
-        userEntity.addListEntity(new ListEntity());
+        ListEntity listEntity = new ListEntity();
+        listEntity.setTitle("autogen-" + LocalDateTime.now());
+
+        listEntity.addItem(new ItemEntity("Apples"));
+        listEntity.addItem(new ItemEntity("Grapes"));
+
+        userEntity.addListEntity(listEntity);
 
         database.entityManager.persist(userEntity);
         return "set";
@@ -54,11 +62,7 @@ public class AuthResource {
     @Path("/select")
     public String select() {
         List<UserEntity> userEntityList = database.entityManager.createQuery("SELECT u FROM UserEntity AS u").getResultList();
-        return userEntityList
-                .parallelStream()
-                .map(UserEntity::toString)
-                .collect(Collectors.toList())
-                .toString();
+        return new Gson().toJson(userEntityList);
 
     }
 

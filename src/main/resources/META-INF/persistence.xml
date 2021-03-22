@@ -10,6 +10,7 @@
 
         <class>entity.UserEntity</class>
         <class>entity.ListEntity</class>
+        <class>entity.ItemEntity</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>

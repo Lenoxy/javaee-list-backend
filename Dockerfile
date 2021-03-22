@@ -5,7 +5,7 @@ COPY --chown=1001:0 src/main/liberty/config/server.xml /config/
 
 
 # Used to enable debug mode
-COPY --chown=1001:0 jvm.options /config/jvm.options
+# COPY --chown=1001:0 jvm.options /config/jvm.options
 
 # Add app
 COPY --chown=1001:0 target/api.war /config/apps

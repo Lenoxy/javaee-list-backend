@@ -24,34 +24,34 @@ public class UserEntity{
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<ListEntity> listEntities = new ArrayList<>();
+    private List<ListEntity> lists = new ArrayList<>();
 
     public UserEntity(){
+    }
+
+    @Override
+    public String toString(){
+        return "UserEntity{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", plainPassword='" + plainPassword + '\'' +
+                ", lists=" + lists +
+                '}';
     }
 
     public UserEntity(String username, String plainPassword, List<ListEntity> listEntities){
         this.username = username;
         this.plainPassword = plainPassword;
-        this.listEntities = listEntities;
+        this.lists = listEntities;
     }
 
     public List<ListEntity> getListEntities(){
-        return listEntities;
+        return lists;
     }
 
     public void addListEntity(ListEntity listEntity){
-        this.listEntities.add(listEntity);
+        this.lists.add(listEntity);
         listEntity.setOwner(this);
-    }
-
-    @Override
-    public String toString() {
-        return "UserEntity{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", plainPassword='" + plainPassword + '\'' +
-                ", listEntities=" + listEntities +
-                '}';
     }
 
     public int getId(){
