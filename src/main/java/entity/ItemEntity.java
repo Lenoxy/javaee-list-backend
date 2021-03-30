@@ -1,5 +1,8 @@
 package entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 
 @Entity
@@ -13,7 +16,8 @@ public class ItemEntity{
     @Column(name = "content")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonbTransient
     private ListEntity list;
 
     public ItemEntity(){
@@ -27,19 +31,21 @@ public class ItemEntity{
         return id;
     }
 
+    @JsonbTransient
     public ListEntity getList(){
         return list;
     }
 
+    @JsonbTransient
     public void setList(ListEntity list){
         this.list = list;
     }
 
-    @Override
-    public String toString(){
-        return "ItemEntity{" +
-                "id=" + id +
-                ", list=" + list +
-                '}';
+    public String getContent(){
+        return content;
+    }
+
+    public void setContent(String content){
+        this.content = content;
     }
 }

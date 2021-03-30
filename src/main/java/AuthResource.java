@@ -1,4 +1,4 @@
-import com.google.gson.Gson;
+import dto.RegisterUserDto;
 import entity.ItemEntity;
 import entity.ListEntity;
 import entity.UserEntity;
@@ -7,20 +7,39 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Named
 @Path("/auth")
-public class AuthResource {
+public class AuthResource{
     @Inject
     Database database;
+
+    @PUT
+    public String login(){
+        return null;
+    }
+
+    @Path("/register")
+    @POST
+    @Consumes("application/json")
+    public Response register(RegisterUserDto registerUserDto){
+        if(!registerUserDto.isValid()){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+
+        return Response.status(Response.Status.OK).build();
+    }
+
+
 
     @GET
     @Path("/insert")
     @Transactional
-    public String insertGenerated() {
+    public String insertGenerated(){
         UserEntity userEntity = new UserEntity();
 
         userEntity.setUsername("autogen-" + LocalDateTime.now());
@@ -41,18 +60,15 @@ public class AuthResource {
     @POST
     @Path("/insert")
     @Transactional
-    public String insertCustom(
-            @FormParam("username") String username,
-            @FormParam("password") String password
-    ) {
-        UserEntity userEntity = new UserEntity(username, password, null);
+    @Consumes("application/json")
+    public String insertCustom(UserEntity userEntity){
         database.entityManager.persist(userEntity);
         return "done";
     }
 
     @GET
     @Path("/select/{id}")
-    public String selectById(@PathParam("id") int id) {
+    public String selectById(@PathParam("id") int id){
         UserEntity u = database.entityManager.getReference(UserEntity.class, id);
 
         return u.toString();
@@ -60,10 +76,9 @@ public class AuthResource {
 
     @GET
     @Path("/select")
-    public String select() {
-        List<UserEntity> userEntityList = database.entityManager.createQuery("SELECT u FROM UserEntity AS u").getResultList();
-        return new Gson().toJson(userEntityList);
-
+    @Produces("application/json")
+    public List<UserEntity> select(){
+        return database.entityManager.createQuery("SELECT u FROM UserEntity AS u").getResultList();
     }
 
 }

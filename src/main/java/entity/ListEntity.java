@@ -1,5 +1,6 @@
 package entity;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +16,9 @@ public class ListEntity{
     @Column(name = "title")
     private String title;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonbTransient
     private UserEntity owner;
-
     @OneToMany(
             mappedBy = "list",
             cascade = CascadeType.ALL,
@@ -28,30 +29,22 @@ public class ListEntity{
     public ListEntity(){
     }
 
-    public ListEntity(UserEntity owner){
-        this.owner = owner;
+    public ListEntity(String title){
+        this.title = title;
     }
 
     public int getId(){
         return id;
     }
 
+    @JsonbTransient
     public UserEntity getOwner(){
         return owner;
     }
 
+    @JsonbTransient
     public void setOwner(UserEntity owner){
         this.owner = owner;
-    }
-
-    @Override
-    public String toString(){
-        return "ListEntity{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", owner=" + owner +
-                ", items=" + items +
-                '}';
     }
 
     public String getTitle(){
@@ -64,6 +57,10 @@ public class ListEntity{
 
     public List<ItemEntity> getItems(){
         return items;
+    }
+
+    public void setItems(List<ItemEntity> items){
+        this.items = items;
     }
 
     public void addItem(ItemEntity item){

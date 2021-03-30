@@ -1,5 +1,6 @@
 package entity;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 @Entity
 @Table(name = "list_user")
 public class UserEntity{
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -18,25 +20,15 @@ public class UserEntity{
     // Todo HASH
     @Column(name = "plainPassword")
     private String plainPassword;
-
     @OneToMany(
             mappedBy = "owner",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+
     private List<ListEntity> lists = new ArrayList<>();
 
     public UserEntity(){
-    }
-
-    @Override
-    public String toString(){
-        return "UserEntity{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", plainPassword='" + plainPassword + '\'' +
-                ", lists=" + lists +
-                '}';
     }
 
     public UserEntity(String username, String plainPassword, List<ListEntity> listEntities){
@@ -45,8 +37,13 @@ public class UserEntity{
         this.lists = listEntities;
     }
 
-    public List<ListEntity> getListEntities(){
+
+    public List<ListEntity> getLists(){
         return lists;
+    }
+
+    public void setLists(List<ListEntity> lists){
+        this.lists = lists;
     }
 
     public void addListEntity(ListEntity listEntity){

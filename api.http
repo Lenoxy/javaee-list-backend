@@ -15,7 +15,36 @@ Accept: *
 
 
 POST http://localhost:8080/api/auth/insert
-Content-Type: application/x-www-form-urlencoded
+Content-Type: application/json
 
-username=httpUser&password=httpPassword
+{
+  "username": "testli",
+  "plainPassword": "xxxxxxx",
+  "lists": [
+    {
+      "title": "list-title",
+      "items": [
+        {
+          "content": "item1"
+        },
+        {
+          "content": "item2"
+        },
+        {
+          "content": "item3"
+        }
+      ]
+    }
+  ]
+}
 
+###
+
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "testli",
+  "passwordSHA256": "xxxxxxx",
+  "email": "xxxxx@yyy.zz"
+}
