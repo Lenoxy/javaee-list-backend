@@ -10,7 +10,7 @@ COPY --chown=1001:0 target/liberty/wlp/usr/shared/resources/jdbc/postgresql-42.2
 COPY --chown=1001:0 target/api.war /config/apps
 
 # Used to enable debug mode
-# COPY --chown=1001:0 jvm.options /config/jvm.options
+COPY --chown=1001:0 jvm.options /config/jvm.options
 
 # Apparently only needed for optimized production builds
 # RUN configure.sh

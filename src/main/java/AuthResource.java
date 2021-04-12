@@ -1,4 +1,4 @@
-import dto.RegisterUserDto;
+import dto.UserDto;
 import entity.ItemEntity;
 import entity.ListEntity;
 import entity.UserEntity;
@@ -10,6 +10,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Named
 @Path("/auth")
@@ -25,7 +26,7 @@ public class AuthResource{
     @Path("/register")
     @POST
     @Consumes("application/json")
-    public Response register(RegisterUserDto registerUserDto){
+    public Response register(UserDto registerUserDto){
         if(!registerUserDto.isValid()){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -77,8 +78,10 @@ public class AuthResource{
     @GET
     @Path("/select")
     @Produces("application/json")
-    public List<UserEntity> select(){
-        return database.entityManager.createQuery("SELECT u FROM UserEntity AS u").getResultList();
+    public List<UserDto> select(){
+        // Mapper -> Mapstruct oder von Hand
+        List<UserEntity> resultList = (List<UserEntity>) database.entityManager.createQuery("SELECT u FROM UserEntity AS u").getResultList();
+        return resultList.stream().map(Mapper::toUserDto).collect(Collectors.toList());
     }
 
 }

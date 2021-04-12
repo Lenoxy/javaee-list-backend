@@ -9,9 +9,6 @@ services:
     - 7777:7777 # Debug port
     depends_on:
       - postgres
-
-        # Property to debug the JVM most likely necessary
-       
     #volumes:
     #- ./out/artifacts/package/package.war:/config/apps/package.war
     #- ./src/main/liberty/config/server.xml:/config/server.xml
