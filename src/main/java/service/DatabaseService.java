@@ -1,11 +1,11 @@
 package service;
 
-import javax.ejb.Singleton;
+import javax.ejb.EJB;
 import javax.ejb.Startup;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-@Singleton
+@EJB
 @Startup
 public class DatabaseService{
     @PersistenceContext

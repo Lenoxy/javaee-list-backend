@@ -1,8 +1,7 @@
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import dto.UserDto;
 import entity.UserEntity;
 import service.DatabaseService;
+import service.JWTService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,6 +19,9 @@ public class UserResource{
     @Inject
     DatabaseService database;
 
+    @Inject
+    JWTService jwtService;
+
     @Path("/login")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -33,20 +35,14 @@ public class UserResource{
         q.setParameter("username", userDto.getUsername());
 
         // TODO: Throws if no user is found
-        UserEntity user = (UserEntity) q.getSingleResult();
+        UserEntity userEntity = (UserEntity) q.getSingleResult();
 
-        if(userDto.getUsername().equals(user.getUsername()) &&
-                userDto.getPasswordSHA256().equals(user.getPasswordSHA256())
+        if(userDto.getUsername().equals(userEntity.getUsername()) &&
+                userDto.getPasswordSHA256().equals(userEntity.getPasswordSHA256())
         ){
-            Algorithm algorithm = Algorithm.HMAC256("secret"); // TODO
             return Response
                     .status(Response.Status.OK)
-                    .entity(
-                            JWT.create()
-                                    .withIssuer("list-backend")
-                                    .withClaim("username", user.getUsername())
-                                    .sign(algorithm)
-                    ).build();
+                    .entity(jwtService.createJwt(userEntity)).build();
         }else{
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -71,6 +67,19 @@ public class UserResource{
                 .status(Response.Status.OK)
                 .entity(login(userDto).getEntity())
                 .build();
+    }
+
+    //TODO: Make this an interceptor?
+    @Path("verify")
+    @PUT
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response verify(String jwt){
+        System.out.println("jwt = " + jwt);
+        if(jwtService.isJwtValid(jwt)){
+            return Response.status(Response.Status.ACCEPTED).build();
+        }else{
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
     }
 
     @GET

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class AuthResourceTest{
+class UserResourceTest{
     private final ItemEntity itemEntity1 = new ItemEntity("content1");
     private final ItemEntity itemEntity2 = new ItemEntity("content2");
     private final ItemEntity itemEntity3 = new ItemEntity("content3");

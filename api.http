@@ -8,35 +8,10 @@ Accept: *
 
 ###
 
-GET http://localhost:8080/api/auth/insert
-Accept: *
+PUT http://localhost:8080/api/auth/verify
+Content-Type: text/plain
 
-###
-
-
-POST http://localhost:8080/api/auth/insert
-Content-Type: application/json
-
-{
-  "username": "testli",
-  "plainPassword": "490d189e7a0d9bdaf45159ffa04d677b5bba750085a71d8398484b26939fe52b",
-  "lists": [
-    {
-      "title": "list-title",
-      "items": [
-        {
-          "content": "item1"
-        },
-        {
-          "content": "item2"
-        },
-        {
-          "content": "item3"
-        }
-      ]
-    }
-  ]
-}
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsaXN0LWJhY2tlbmQiLCJ1c2VybmFtZSI6InRlc3RsaSJ9.HA2t0_G16oHyGddI_NVMZnqARc7Jj6BU_R1gL8omq_8
 
 ###
 
@@ -54,6 +29,6 @@ PUT http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "autogen",
+  "username": "testli",
   "passwordSHA256": "490d189e7a0d9bdaf45159ffa04d677b5bba750085a71d8398484b26939fe52b"
 }
