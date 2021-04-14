@@ -18,7 +18,6 @@ public class ItemEntity{
     private String content;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonbTransient
     private ListEntity list;
 
     public ItemEntity(){
@@ -36,12 +35,10 @@ public class ItemEntity{
         return id;
     }
 
-    @JsonbTransient
     public ListEntity getList(){
         return list;
     }
 
-    @JsonbTransient
     public void setList(ListEntity list){
         this.list = list;
     }

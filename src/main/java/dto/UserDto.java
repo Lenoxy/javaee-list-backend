@@ -19,17 +19,18 @@ public class UserDto{
         this.lists = lists;
     }
 
+    public UserDto(){}
+
     public boolean isInvalid(){
+        System.out.println("username = " + username);
+        System.out.println("passwordSHA256 = " + passwordSHA256);
 
         if(username == null || username.length() < 3){
             return true;
         }
-        if(passwordSHA256 == null /*|| passwordSHA256.length()  != 64*/){
+        if(passwordSHA256 == null || passwordSHA256.length() != 64){
             return true;
         }
-//        if(email == null || ! email.matches("[^@]+@[^\\.]+\\..+")){
-//            return false;
-//        }
 
         return false;
     }

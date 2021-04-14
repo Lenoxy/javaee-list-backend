@@ -1,29 +1,29 @@
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import dto.UserDto;
-import entity.ItemEntity;
-import entity.ListEntity;
 import entity.UserEntity;
+import service.DatabaseService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Named
 @Path("/auth")
-public class AuthResource{
+public class UserResource{
     @Inject
-    Database database;
-
+    DatabaseService database;
 
     @Path("/login")
     @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public Response login(UserDto userDto){
         if(userDto.isInvalid()){
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -31,11 +31,12 @@ public class AuthResource{
 
         Query q = database.entityManager.createQuery("SELECT u FROM UserEntity AS u WHERE u.username = :username");
         q.setParameter("username", userDto.getUsername());
+
+        // TODO: Throws if no user is found
         UserEntity user = (UserEntity) q.getSingleResult();
 
-        if(
-                userDto.getUsername().equals(user.getUsername()) &&
-                        userDto.getPasswordSHA256().equals(user.getPasswordSHA256())
+        if(userDto.getUsername().equals(user.getUsername()) &&
+                userDto.getPasswordSHA256().equals(user.getPasswordSHA256())
         ){
             Algorithm algorithm = Algorithm.HMAC256("secret"); // TODO
             return Response
@@ -53,50 +54,28 @@ public class AuthResource{
 
     @Path("/register")
     @POST
-    @Consumes("application/json")
-    public Response register(UserDto registerUserDto){
-        if(registerUserDto.isInvalid()){
+    @Transactional
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response register(UserDto userDto){
+        // Not very clean implementation... TODO: Revisit
+        if(userDto.isInvalid() || userDto.getLists() != null){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-
-
-        return Response.status(Response.Status.OK).build();
-    }
-
-
-    @GET
-    @Path("/insert")
-    @Transactional
-    public String insertGenerated(){
-        UserEntity userEntity = new UserEntity();
-
-        userEntity.setUsername("autogen-" + LocalDateTime.now());
-        userEntity.setPasswordSHA256("testpass"); // Should be a SHA256 String
-
-        ListEntity listEntity = new ListEntity();
-        listEntity.setTitle("autogen-" + LocalDateTime.now());
-
-        listEntity.addItem(new ItemEntity("Apples"));
-        listEntity.addItem(new ItemEntity("Grapes"));
-
-        userEntity.addListEntity(listEntity);
+        UserEntity userEntity = userDto.toUserEntity();
 
         database.entityManager.persist(userEntity);
-        return "set";
-    }
 
-    @POST
-    @Path("/insert")
-    @Transactional
-    @Consumes("application/json")
-    public String insertCustom(UserEntity userEntity){
-        database.entityManager.persist(userEntity);
-        return "done";
+        // User is logged in automatically
+        return Response
+                .status(Response.Status.OK)
+                .entity(login(userDto).getEntity())
+                .build();
     }
 
     @GET
     @Path("/select/{id}")
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public UserDto selectById(@PathParam("id") int id){
         UserEntity userEntity = database.entityManager.getReference(UserEntity.class, id);
         return userEntity.toUserDto();
@@ -104,8 +83,8 @@ public class AuthResource{
 
     @GET
     @Path("/select")
-    @Produces("application/json")
-    public List<UserDto> select(){
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<UserDto> selectAll(){
         List<UserEntity> resultList = (List<UserEntity>) database.entityManager.createQuery("SELECT u FROM UserEntity AS u").getResultList();
         return resultList.stream().map(UserEntity::toUserDto).collect(Collectors.toList());
     }

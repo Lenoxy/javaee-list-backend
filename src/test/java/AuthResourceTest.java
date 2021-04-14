@@ -21,7 +21,7 @@ class AuthResourceTest{
 
     private final UserEntity userEntity = new UserEntity("username123", "plainSecurePassword", new ArrayList<>());
 
-    @Test
+    //@Test
     public void jsonBRecursiveTest(){
         listEntity1.addItem(itemEntity1);
         listEntity1.addItem(itemEntity2);
