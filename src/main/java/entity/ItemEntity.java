@@ -1,6 +1,7 @@
 package entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dto.ItemDto;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
@@ -25,6 +26,10 @@ public class ItemEntity{
 
     public ItemEntity(String content){
         this.content = content;
+    }
+
+    public ItemDto toItemDto(){
+        return new ItemDto(id, content);
     }
 
     public int getId(){

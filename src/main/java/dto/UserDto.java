@@ -1,5 +1,7 @@
 package dto;
 
+import entity.UserEntity;
+
 import java.util.List;
 
 public class UserDto{
@@ -17,19 +19,27 @@ public class UserDto{
         this.lists = lists;
     }
 
-    public boolean isValid(){
+    public boolean isInvalid(){
 
         if(username == null || username.length() < 3){
-            return false;
+            return true;
         }
         if(passwordSHA256 == null /*|| passwordSHA256.length()  != 64*/){
-            return false;
+            return true;
         }
 //        if(email == null || ! email.matches("[^@]+@[^\\.]+\\..+")){
 //            return false;
 //        }
 
-        return true;
+        return false;
+    }
+
+    public UserEntity toUserEntity(){
+        return new UserEntity(
+                username,
+                passwordSHA256,
+                null
+        );
     }
 
     public String getUsername(){

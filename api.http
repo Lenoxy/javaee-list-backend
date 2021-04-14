@@ -45,6 +45,15 @@ Content-Type: application/json
 
 {
   "username": "testli",
-  "passwordSHA256": "xxxxxxx",
-  "email": "xxxxx@yyy.zz"
+  "passwordSHA256": "xxxxxxx"
+}
+
+###
+
+PUT http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "autogen-2021-04-14T04:46:57.534511500",
+  "passwordSHA256": "testpass"
 }

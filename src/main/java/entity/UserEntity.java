@@ -1,9 +1,11 @@
 package entity;
 
-import javax.json.bind.annotation.JsonbTransient;
+import dto.UserDto;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "list_user")
@@ -18,23 +20,35 @@ public class UserEntity{
     private String username;
 
     // Todo HASH
-    @Column(name = "plainPassword")
-    private String plainPassword;
+    @Column(name = "password")
+    private String passwordSHA256;
+
     @OneToMany(
             mappedBy = "owner",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-
     private List<ListEntity> lists = new ArrayList<>();
 
     public UserEntity(){
     }
 
-    public UserEntity(String username, String plainPassword, List<ListEntity> listEntities){
+    public UserEntity(String username, String passwordSHA256, List<ListEntity> listEntities){
         this.username = username;
-        this.plainPassword = plainPassword;
+        this.passwordSHA256 = passwordSHA256;
         this.lists = listEntities;
+    }
+
+
+    public UserDto toUserDto(){
+        return new UserDto(
+                id,
+                passwordSHA256,
+                username,
+                lists.stream()
+                        .map(ListEntity::toListDto)
+                        .collect(Collectors.toList())
+        );
     }
 
 
@@ -63,11 +77,11 @@ public class UserEntity{
         this.username = username;
     }
 
-    public String getPlainPassword(){
-        return plainPassword;
+    public String getPasswordSHA256(){
+        return passwordSHA256;
     }
 
-    public void setPlainPassword(String plainPassword){
-        this.plainPassword = plainPassword;
+    public void setPasswordSHA256(String passwordSHA256){
+        this.passwordSHA256 = passwordSHA256;
     }
 }

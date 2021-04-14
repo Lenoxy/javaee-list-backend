@@ -1,9 +1,12 @@
 package entity;
 
+import dto.ListDto;
+
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "list_list")
@@ -31,6 +34,14 @@ public class ListEntity{
 
     public ListEntity(String title){
         this.title = title;
+    }
+
+    public ListDto toListDto(){
+        return new ListDto(
+                id,
+                title,
+                items.stream().map(ItemEntity::toItemDto).collect(Collectors.toList())
+        );
     }
 
     public int getId(){
