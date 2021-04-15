@@ -21,6 +21,7 @@ public class ListDto{
 
     public ListEntity toListEntity(){
         return new ListEntity(
+                id,
                 title,
                 items.stream().map(ItemDto::toItemEntity).collect(Collectors.toList())
         );

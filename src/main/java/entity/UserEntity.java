@@ -19,7 +19,6 @@ public class UserEntity{
     @Column(name = "username")
     private String username;
 
-    // Todo HASH
     @Column(name = "password")
     private String passwordSHA256;
 
@@ -33,7 +32,8 @@ public class UserEntity{
     public UserEntity(){
     }
 
-    public UserEntity(String username, String passwordSHA256, List<ListEntity> listEntities){
+    public UserEntity(int id, String username, String passwordSHA256, List<ListEntity> listEntities){
+        this.id = id;
         this.username = username;
         this.passwordSHA256 = passwordSHA256;
         this.lists = listEntities;

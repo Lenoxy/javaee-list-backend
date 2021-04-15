@@ -23,7 +23,8 @@ public class ItemEntity{
     public ItemEntity(){
     }
 
-    public ItemEntity(String content){
+    public ItemEntity(int id, String content){
+        this.id = id;
         this.content = content;
     }
 

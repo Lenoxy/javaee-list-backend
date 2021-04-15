@@ -36,6 +36,7 @@ public class UserDto{
 
     public UserEntity toUserEntity(){
         return new UserEntity(
+                id,
                 username,
                 passwordSHA256,
                 lists.stream().map(ListDto::toListEntity).collect(Collectors.toList())

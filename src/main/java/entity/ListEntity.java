@@ -20,8 +20,8 @@ public class ListEntity{
     private String title;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonbTransient
     private UserEntity owner;
+
     @OneToMany(
             mappedBy = "list",
             cascade = CascadeType.ALL,
@@ -32,7 +32,8 @@ public class ListEntity{
     public ListEntity(){
     }
 
-    public ListEntity(String title, List<ItemEntity> items){
+    public ListEntity(int id, String title, List<ItemEntity> items){
+        this.id = id;
         this.title = title;
         this.items = items;
     }

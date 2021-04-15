@@ -15,7 +15,7 @@ public class ItemDto{
     }
 
     public ItemEntity toItemEntity(){
-        return new ItemEntity(content);
+        return new ItemEntity(id, content);
     }
 
     public int getId(){
