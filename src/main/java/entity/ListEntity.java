@@ -32,8 +32,9 @@ public class ListEntity{
     public ListEntity(){
     }
 
-    public ListEntity(String title){
+    public ListEntity(String title, List<ItemEntity> items){
         this.title = title;
+        this.items = items;
     }
 
     public ListDto toListDto(){

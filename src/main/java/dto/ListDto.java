@@ -1,6 +1,9 @@
 package dto;
 
+import entity.ListEntity;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ListDto{
     private int id;
@@ -14,6 +17,13 @@ public class ListDto{
         this.id = id;
         this.title = title;
         this.items = items;
+    }
+
+    public ListEntity toListEntity(){
+        return new ListEntity(
+                title,
+                items.stream().map(ItemDto::toItemEntity).collect(Collectors.toList())
+        );
     }
 
     public int getId(){

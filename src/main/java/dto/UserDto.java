@@ -3,6 +3,7 @@ package dto;
 import entity.UserEntity;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserDto{
 
@@ -22,22 +23,22 @@ public class UserDto{
     public UserDto(){
     }
 
-    public boolean isInvalid(){
+    public boolean isValid(){
         if(username == null || username.length() < 3){
-            return true;
+            return false;
         }
         if(passwordSHA256 == null || passwordSHA256.length() != 64){
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     public UserEntity toUserEntity(){
         return new UserEntity(
                 username,
                 passwordSHA256,
-                null
+                lists.stream().map(ListDto::toListEntity).collect(Collectors.toList())
         );
     }
 

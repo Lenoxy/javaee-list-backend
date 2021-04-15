@@ -27,7 +27,7 @@ public class UserResource{
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response login(UserDto userDto){
-        if(userDto.isInvalid()){
+        if(userDto.isValid()){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
@@ -55,7 +55,7 @@ public class UserResource{
     @Produces(MediaType.TEXT_PLAIN)
     public Response register(UserDto userDto){
         // Not very clean implementation... TODO: Revisit
-        if(userDto.isInvalid() || userDto.getLists() != null){
+        if(userDto.isValid() || userDto.getLists() != null){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         UserEntity userEntity = userDto.toUserEntity();

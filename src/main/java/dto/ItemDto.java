@@ -1,5 +1,7 @@
 package dto;
 
+import entity.ItemEntity;
+
 public class ItemDto{
     private int id;
     private String content;
@@ -10,6 +12,10 @@ public class ItemDto{
     public ItemDto(int id, String content){
         this.id = id;
         this.content = content;
+    }
+
+    public ItemEntity toItemEntity(){
+        return new ItemEntity(content);
     }
 
     public int getId(){
