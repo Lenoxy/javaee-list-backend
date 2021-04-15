@@ -39,7 +39,6 @@ public class UserEntity{
         this.lists = listEntities;
     }
 
-
     public UserDto toUserDto(){
         return new UserDto(
                 id,
@@ -50,7 +49,6 @@ public class UserEntity{
                         .collect(Collectors.toList())
         );
     }
-
 
     public List<ListEntity> getLists(){
         return lists;

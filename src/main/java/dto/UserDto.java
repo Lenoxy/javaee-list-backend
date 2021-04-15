@@ -39,7 +39,7 @@ public class UserDto{
                 id,
                 username,
                 passwordSHA256,
-                lists.stream().map(ListDto::toListEntity).collect(Collectors.toList())
+                lists != null ? lists.stream().map(ListDto::toListEntity).collect(Collectors.toList()) : null
         );
     }
 

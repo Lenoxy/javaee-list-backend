@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import dto.UserDto;
 import entity.UserEntity;
 
 import javax.ejb.EJB;
@@ -22,11 +23,10 @@ public class JWTService{
             .build();
 
 
-    public String createJwt(UserEntity userEntity){
-        System.out.println("userEntity.getUsername() = " + userEntity.getUsername());
+    public String createJwt(UserDto userDto){
         return JWT.create()
                 .withIssuer(ISSUER)
-                .withClaim("user", userEntity.getUsername())
+                .withClaim("user", userDto.getUsername())
                 .sign(ALGORITHM);
     }
 

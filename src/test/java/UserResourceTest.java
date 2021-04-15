@@ -1,18 +1,16 @@
-import entity.ItemEntity;
-import entity.ListEntity;
-import entity.UserEntity;
 import org.junit.jupiter.api.Test;
 
-import javax.json.bind.JsonbBuilder;
-
-import java.util.ArrayList;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import service.DatabaseService;
+import static org.mockito.Mockito.*;
 
 class UserResourceTest{
-    @Test
+
+    private final DatabaseService databaseServiceMock = mock(DatabaseService.class);
+
+    //@Test
     public void loginTest(){
+        // TODO first: Make code more testable
+        //when(databaseServiceMock.entityManager.)
 
     }
 }

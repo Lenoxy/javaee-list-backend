@@ -1,5 +1,6 @@
 import dto.UserDto;
 import entity.UserEntity;
+import repository.UserRepository;
 import service.DatabaseService;
 import service.JWTService;
 
@@ -16,33 +17,32 @@ import java.util.stream.Collectors;
 @Named
 @Path("/auth")
 public class UserResource{
+
+    //TODO: Remove
     @Inject
     DatabaseService database;
 
+
     @Inject
     JWTService jwtService;
+
+    @Inject
+    UserRepository userRepository;
 
     @Path("/login")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response login(UserDto userDto){
-        if(userDto.isValid()){
+        if(!userDto.isValid()){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        Query q = database.entityManager.createQuery("SELECT u FROM UserEntity AS u WHERE u.username = :username");
-        q.setParameter("username", userDto.getUsername());
-
-        // TODO: Throws if no user is found
-        UserEntity userEntity = (UserEntity) q.getSingleResult();
-
-        if(userDto.getUsername().equals(userEntity.getUsername()) &&
-                userDto.getPasswordSHA256().equals(userEntity.getPasswordSHA256())
-        ){
+        userDto = userRepository.get(userDto);
+        if(userDto != null){
             return Response
                     .status(Response.Status.OK)
-                    .entity(jwtService.createJwt(userEntity)).build();
+                    .entity(jwtService.createJwt(userDto)).build();
         }else{
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -55,7 +55,7 @@ public class UserResource{
     @Produces(MediaType.TEXT_PLAIN)
     public Response register(UserDto userDto){
         // Not very clean implementation... TODO: Revisit
-        if(userDto.isValid() || userDto.getLists() != null){
+        if(!userDto.isValid() || userDto.getLists() != null){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         UserEntity userEntity = userDto.toUserEntity();
