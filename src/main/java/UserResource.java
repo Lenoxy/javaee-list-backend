@@ -74,7 +74,6 @@ public class UserResource{
     @PUT
     @Consumes(MediaType.TEXT_PLAIN)
     public Response verify(String jwt){
-        System.out.println("jwt = " + jwt);
         if(jwtService.isJwtValid(jwt)){
             return Response.status(Response.Status.ACCEPTED).build();
         }else{

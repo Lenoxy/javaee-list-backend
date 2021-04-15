@@ -16,6 +16,11 @@ public class JWTService{
     private final String ISSUER = "list-backend";
     private final Algorithm ALGORITHM = Algorithm.HMAC256("very_secret"); // TODO
 
+    private final JWTVerifier verifier = JWT.require(ALGORITHM)
+            .withIssuer(ISSUER)
+            .withClaimPresence("user")
+            .build();
+
 
     public String createJwt(UserEntity userEntity){
         System.out.println("userEntity.getUsername() = " + userEntity.getUsername());
@@ -27,16 +32,7 @@ public class JWTService{
 
     public boolean isJwtValid(String jwt){
         try{
-            DecodedJWT decodedJWT = JWT.decode(jwt);
-            System.out.println("decodedJWT User = " + decodedJWT.getClaim("user"));
-            System.out.println("decodedJWT Signature = " + decodedJWT.getSignature());
-            System.out.println("decodedJWT Issuer = " + decodedJWT.getIssuer());
-
-            JWTVerifier verifier = JWT.require(ALGORITHM)
-                    .withIssuer(ISSUER)
-                    .withClaimPresence("user")
-                    .build();
-            decodedJWT = verifier.verify(jwt);
+            DecodedJWT decodedJWT = verifier.verify(jwt);
             return true;
         }catch(JWTVerificationException e){
             e.printStackTrace();
