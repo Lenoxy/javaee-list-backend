@@ -16,11 +16,6 @@ import java.util.stream.Collectors;
 @Path("/auth")
 public class UserResource{
 
-    //TODO: Remove
-    @Inject
-    DatabaseService database;
-
-
     @Inject
     JWTService jwtService;
 
@@ -81,6 +76,10 @@ public class UserResource{
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
+
+    //TODO: Remove
+    @Inject
+    DatabaseService database;
 
     @GET
     @Path("/select/{id}")
