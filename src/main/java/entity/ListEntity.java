@@ -32,6 +32,10 @@ public class ListEntity{
     public ListEntity(){
     }
 
+    public ListEntity(String title){
+        this.title = title;
+    }
+
     public ListEntity(int id, String title, List<ItemEntity> items){
         this.id = id;
         this.title = title;
