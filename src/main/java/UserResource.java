@@ -6,8 +6,6 @@ import service.JWTService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.Query;
-import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -34,12 +32,11 @@ public class UserResource{
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response login(UserDto userDto){
-        if(!userDto.isValid()){
+        if(! userDto.isValid()){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        userDto = userRepository.get(userDto);
-        if(userDto != null){
+        if(isCorrectCredentials(userDto)){
             return Response
                     .status(Response.Status.OK)
                     .entity(jwtService.createJwt(userDto)).build();
@@ -48,26 +45,30 @@ public class UserResource{
         }
     }
 
+    private boolean isCorrectCredentials(UserDto userDto){
+        UserDto responseUserDto = userRepository.get(userDto);
+        return responseUserDto != null;
+    }
+
     @Path("/register")
     @POST
-    @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response register(UserDto userDto){
         // Not very clean implementation... TODO: Revisit
-        if(!userDto.isValid() || userDto.getLists() != null){
+        if(! userDto.isValid() || userDto.getLists() != null){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        UserEntity userEntity = userDto.toUserEntity();
 
-        database.entityManager.persist(userEntity);
+        userRepository.add(userDto);
 
         // User is logged in automatically
         return Response
                 .status(Response.Status.OK)
-                .entity(login(userDto).getEntity())
+                .entity(jwtService.createJwt(userDto))
                 .build();
     }
+
 
     //TODO: Make this an interceptor?
     @Path("verify")

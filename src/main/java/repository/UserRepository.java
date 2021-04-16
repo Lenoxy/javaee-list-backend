@@ -9,12 +9,14 @@ import service.DatabaseService;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 
 @EJB
 public class UserRepository{
     @Inject
     DatabaseService database;
 
+    @Transactional
     public UserDto get(UserDto userDto){
         Query q = database.entityManager.createQuery(
                 "SELECT u FROM UserEntity AS u " +
@@ -24,7 +26,7 @@ public class UserRepository{
         q.setParameter("username", userDto.getUsername());
         q.setParameter("passwordSHA256", userDto.getPasswordSHA256());
 
-        if(q.getFirstResult() > 0){
+        if(q.getResultList().size() == 1){
             return ((UserEntity) q.getSingleResult()).toUserDto();
         }else{
             return null;
@@ -35,8 +37,9 @@ public class UserRepository{
 
     }
 
-    public void add(ItemDto object){
-
+    @Transactional
+    public void add(UserDto userDto){
+        database.entityManager.persist(userDto.toUserEntity());
     }
 
     public Object modifyById(int id){
