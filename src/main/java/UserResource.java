@@ -65,18 +65,6 @@ public class UserResource{
     }
 
 
-    //TODO: Make this an interceptor?
-    @Path("verify")
-    @PUT
-    @Consumes(MediaType.TEXT_PLAIN)
-    public Response verify(String jwt){
-        if(jwtService.isJwtValid(jwt)){
-            return Response.status(Response.Status.ACCEPTED).build();
-        }else{
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-    }
-
     //TODO: Remove
     @Inject
     DatabaseService database;

@@ -1,3 +1,9 @@
+GET http://localhost:8080/api/list
+Accept: *
+Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsaXN0LWJhY2tlbmQiLCJ1c2VyIjoidGVzdGxpIn0.yyeG2UtDv1WVHNSlAkCmqlsAtAsUpgPjH9OSJYNOqKA
+
+###
+
 GET http://localhost:8080/api/auth/select
 Accept: *
 
@@ -32,3 +38,4 @@ Content-Type: application/json
   "username": "testli",
   "passwordSHA256": "490d189e7a0d9bdaf45159ffa04d677b5bba750085a71d8398484b26939fe52b"
 }
+

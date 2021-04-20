@@ -6,11 +6,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import dto.UserDto;
-import entity.UserEntity;
 
 import javax.ejb.EJB;
-import java.util.HashMap;
-import java.util.Map;
 
 @EJB
 public class JWTService{
@@ -37,6 +34,16 @@ public class JWTService{
         }catch(JWTVerificationException e){
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public String getUser(String jwt){
+        try{
+            DecodedJWT decodedJWT = verifier.verify(jwt);
+            return decodedJWT.getClaim("user").asString();
+        }catch(JWTVerificationException e){
+            e.printStackTrace();
+            return null;
         }
     }
 }

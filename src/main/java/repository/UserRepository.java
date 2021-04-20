@@ -1,8 +1,6 @@
 package repository;
 
-import dto.ItemDto;
 import dto.UserDto;
-import entity.ItemEntity;
 import entity.UserEntity;
 import service.DatabaseService;
 
