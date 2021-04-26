@@ -9,9 +9,15 @@ public class a{
         return userDto(new Random().nextInt());
     }
 
+    public static UserDto UserDtoWithoutLists(){
+        UserDto userDto = userDto(new Random().nextInt());
+        userDto.setLists(null);
+        return userDto;
+    }
+
     public static UserDto InvalidUserDto(){
         return new UserDto(
-                -1,
+                - 1,
                 "not sha256 encrypted",
                 "us",
                 null

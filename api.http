@@ -14,13 +14,6 @@ Accept: *
 
 ###
 
-PUT http://localhost:8080/api/auth/verify
-Content-Type: text/plain
-
-eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsaXN0LWJhY2tlbmQiLCJ1c2VyIjoidGVzdGxpIn0.yyeG2UtDv1WVHNSlAkCmqlsAtAsUpgPjH9OSJYNOqKA
-
-###
-
 POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 

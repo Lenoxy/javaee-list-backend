@@ -3,7 +3,6 @@ package dto;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ItemDtoTest{
 
@@ -14,6 +13,5 @@ class ItemDtoTest{
         ItemDto actual = sut.toItemEntity().toItemDto();
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(sut);
-
     }
 }

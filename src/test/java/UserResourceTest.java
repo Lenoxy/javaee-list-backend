@@ -1,4 +1,5 @@
 import dto.UserDto;
+import dto.a;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,13 +28,23 @@ class UserResourceTest{
     @Test
     void loginTest(){
         UserDto userDto = new UserDto(0, "c3d4856944538698d6cf217896afb58df4478e0f902a1c84bf897779c644deec", "username", null);
-        // TODO This mock is nice and well, but never injected into the sut instance, so the test throws a NullPointer
         when(userRepositoryMock.get(userDto)).thenReturn(userDto);
-        when(jwtServiceMock.createJwt(any())).thenReturn("hello");
+        when(jwtServiceMock.createJwt(any())).thenReturn("testJWT");
+
         String jwt = (String) sut.login(userDto).getEntity();
 
-        assertThat(jwt).isEqualTo("hello");
-
+        assertThat(jwt).isEqualTo("testJWT");
     }
+
+    @Test
+    void registerTest(){
+        UserDto userDto = a.UserDtoWithoutLists();
+        when(jwtServiceMock.createJwt(any())).thenReturn("testJWT");
+
+        String jwt = (String) sut.register(userDto).getEntity();
+
+        assertThat(jwt).isEqualTo("testJWT");
+    }
+
 
 }
