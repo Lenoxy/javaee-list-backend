@@ -4,16 +4,6 @@ Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsaXN0LWJhY2tlbmQi
 
 ###
 
-GET http://localhost:8080/api/auth/select
-Accept: *
-
-###
-
-GET http://localhost:8080/api/auth/select/1
-Accept: *
-
-###
-
 POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 

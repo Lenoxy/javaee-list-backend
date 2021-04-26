@@ -19,6 +19,7 @@ public class JwtFilter implements ContainerRequestFilter{
 
     public void filter(ContainerRequestContext ctx){
         // Let login and register requests pass through
+        // TODO Extremly!!! insecure
         if(! ctx.getUriInfo().getPath().contains("auth")){
             System.out.println(ctx.getHeaderString(HttpHeaders.AUTHORIZATION));
             String jwt = ctx.getHeaderString(HttpHeaders.AUTHORIZATION);
