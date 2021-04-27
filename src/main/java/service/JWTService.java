@@ -32,12 +32,11 @@ public class JWTService{
             DecodedJWT decodedJWT = verifier.verify(jwt);
             return true;
         }catch(JWTVerificationException e){
-            e.printStackTrace();
             return false;
         }
     }
 
-    public String getUser(String jwt){
+    public String getUserName(String jwt){
         try{
             DecodedJWT decodedJWT = verifier.verify(jwt);
             return decodedJWT.getClaim("user").asString();

@@ -5,25 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 public class a{
-    public static UserDto ValidUserDto(){
-        return userDto(new Random().nextInt());
-    }
-
-    public static UserDto UserDtoWithoutLists(){
-        UserDto userDto = userDto(new Random().nextInt());
-        userDto.setLists(null);
-        return userDto;
-    }
-
-    public static UserDto InvalidUserDto(){
-        return new UserDto(
-                - 1,
-                "not sha256 encrypted",
-                "us",
-                null
-        );
-    }
-
     private static UserDto userDto(int random){
         return new UserDto(
                 random,
@@ -70,5 +51,52 @@ public class a{
                 random,
                 String.valueOf(random)
         );
+    }
+
+    public static UserDtoBuilder UserDtoBuilder(){
+        return new UserDtoBuilder();
+    }
+
+    public static class UserDtoBuilder{
+        private int id;
+        private String passwordSHA256;
+        private String username;
+        private List<ListDto> lists;
+
+        private UserDtoBuilder(){
+            this.id = new Random().nextInt();
+            this.passwordSHA256 = "c3d4856944538698d6cf217896afb58df4478e0f902a1c84bf897779c644deec";
+            this.username = String.valueOf(new Random().nextInt());
+            this.lists = listDtoList();
+        }
+
+        public UserDtoBuilder withId(int id){
+            this.id = id;
+            return this;
+        }
+
+        public UserDtoBuilder withPasswordSHA256(String passwordSHA256){
+            this.passwordSHA256 = passwordSHA256;
+            return this;
+        }
+
+        public UserDtoBuilder withUsername(String username){
+            this.username = username;
+            return this;
+        }
+
+        public UserDtoBuilder withLists(List<ListDto> lists){
+            this.lists = lists;
+            return this;
+        }
+
+        public UserDto build(){
+            return new UserDto(
+                    id,
+                    passwordSHA256,
+                    username,
+                    lists
+            );
+        }
     }
 }

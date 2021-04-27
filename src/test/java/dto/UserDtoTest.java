@@ -8,7 +8,7 @@ class UserDtoTest{
 
     @Test
     void toUserEntityAndBack(){
-        UserDto sut = a.ValidUserDto();
+        UserDto sut = a.UserDtoBuilder().build();
 
         UserDto actual = sut.toUserEntity().toUserDto();
 
@@ -19,13 +19,13 @@ class UserDtoTest{
 
     @Test
     void isValidHappyCaseTest(){
-        boolean valid = a.ValidUserDto().isValid();
+        boolean valid = a.UserDtoBuilder().build().isValid();
         assertThat(valid).isTrue();
     }
 
     @Test
     void isValidBadCaseTest(){
-        boolean valid = a.InvalidUserDto().isValid();
+        boolean valid = a.UserDtoBuilder().withUsername("ab").withPasswordSHA256("notsha256").build().isValid();
         assertThat(valid).isFalse();
     }
 

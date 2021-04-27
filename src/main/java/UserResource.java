@@ -30,7 +30,8 @@ public class UserResource{
         if(isCorrectCredentials(userDto)){
             return Response
                     .status(Response.Status.OK)
-                    .entity(jwtService.createJwt(userDto)).build();
+                    .entity(jwtService.createJwt(userDto))
+                    .build();
         }else{
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }

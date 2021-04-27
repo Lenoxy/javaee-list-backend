@@ -38,7 +38,7 @@ class UserResourceTest{
 
     @Test
     void registerTest(){
-        UserDto userDto = a.UserDtoWithoutLists();
+        UserDto userDto = a.UserDtoBuilder().withLists(null).build();
         when(jwtServiceMock.createJwt(any())).thenReturn("testJWT");
 
         String jwt = (String) sut.register(userDto).getEntity();

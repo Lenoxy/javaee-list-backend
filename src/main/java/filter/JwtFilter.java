@@ -1,9 +1,11 @@
-package interceptor;
+package filter;
 
+import exception.BearerInvalidException;
+import exception.BearerMissingException;
+import exception.UserClaimMissingException;
 import service.JWTService;
 
 import javax.inject.Inject;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
@@ -21,20 +23,19 @@ public class JwtFilter implements ContainerRequestFilter{
         // Let login and register requests pass through
         // TODO Extremly!!! insecure
         if(! ctx.getUriInfo().getPath().contains("auth")){
-            System.out.println(ctx.getHeaderString(HttpHeaders.AUTHORIZATION));
             String jwt = ctx.getHeaderString(HttpHeaders.AUTHORIZATION);
 
             if(jwt == null){
-                throw new NotAuthorizedException("Bearer");
+                throw new BearerMissingException("Bearer is missing");
             }
 
             if(! jwtService.isJwtValid(jwt)){
-                throw new NotAuthorizedException("The JWT is invalid");
+                throw new BearerInvalidException("The JWT is invalid");
             }
 
             // Not necessary but cool
-            if(jwtService.getUser(jwt) == null){
-                throw new NotAuthorizedException("The user claim is missing");
+            if(jwtService.getUserName(jwt) == null){
+                throw new UserClaimMissingException("The user claim is missing");
             }
         }
     }

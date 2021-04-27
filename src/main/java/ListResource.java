@@ -27,7 +27,7 @@ public class ListResource{
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ListDto> getListsForUser(@HeaderParam(HttpHeaders.AUTHORIZATION) String jwt){
-        String username = jwtService.getUser(jwt);
+        String username = jwtService.getUserName(jwt);
 
         Query query = databaseService.entityManager.createQuery("SELECT l FROM ListEntity AS l WHERE l.owner.username = :username");
         query.setParameter("username", username);
