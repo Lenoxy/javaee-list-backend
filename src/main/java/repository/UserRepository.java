@@ -31,7 +31,18 @@ public class UserRepository{
         }
     }
 
+    @Transactional
     public void removeById(int id){
+        Query q = database.entityManager.createQuery(
+                "DELETE FROM UserEntity as u " +
+                        "WHERE u.id = :id "
+        );
+        q.setParameter("id", id);
+        int rowsAffected = q.executeUpdate();
+
+        if(rowsAffected != 1){
+            database.entityManager.getTransaction().rollback();
+        }
 
     }
 
@@ -40,6 +51,7 @@ public class UserRepository{
         database.entityManager.persist(userDto.toUserEntity());
     }
 
+    @Transactional
     public Object modifyById(int id){
         return null;
     }
