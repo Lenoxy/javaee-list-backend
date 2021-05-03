@@ -8,35 +8,33 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-//@Testcontainers
-
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Testcontainers
 class UserRepositoryTest{
 
-    //UserRepository sut;
-//    @Container
-//    final PostgreSQLContainer postgres = new PostgreSQLContainer(DockerImageName.parse("postgres:13.2"))
-//            .withDatabaseName("list")
-//            .withUsername("list")
-//            .withPassword("eq7uC37qkQASSLcc");
-
-    //@PersistenceContext(unitName = "TestPU")
+    @Container
+    final PostgreSQLContainer postgres = new PostgreSQLContainer(DockerImageName.parse("postgres:13.2"))
+            .withDatabaseName("list")
+            .withUsername("list")
+            .withPassword("eq7uC37qkQASSLcc");
+    UserRepository sut;
+    //@PersistenceContext
     EntityManager entityManager;
 
     @BeforeEach
     void setUp(){
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("list-db-test");
-        entityManager = entityManagerFactory
-                .createEntityManager();
-
         System.out.println("hello container");
-       // String address = postgres.getHost();
-        //int port = postgres.getFirstMappedPort();
+        entityManager = Persistence.createEntityManagerFactory("list-db-test").createEntityManager();
+        // ...
+        // https://www.eclipse.org/eclipselink/api/2.7/org/eclipse/persistence/platform/server/NoServerPlatform.html
+        //
+        // org.eclipse.persistence.platform.server.NoServerPlatform
+        // PUBLIC: This platform is used when EclipseLink is not within any server (Oc4j, WebLogic, ...) This is also the default platform for all newly created DatabaseSessions. This platform has: - No external transaction controller class - No runtime services (JMX/MBean) - No launching of container Threads
+        //
+        // -> Currently trying to use hibernate instead
+        // Error parsing JNDI name [jdbc/list_db_test]
     }
 
     @Test

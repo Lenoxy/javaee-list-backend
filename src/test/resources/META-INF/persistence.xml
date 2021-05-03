@@ -6,8 +6,8 @@
                         http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
 
     <persistence-unit name="list-db-test" transaction-type="JTA">
-        <jta-data-source>jdbc/list-db</jta-data-source>
-        <non-jta-data-source>jdbc/list-db-JPANJTA</non-jta-data-source>
+        <jta-data-source>jdbc/list_db_test</jta-data-source>
+        <non-jta-data-source>jdbc/list_db_test_unmanaged</non-jta-data-source>
 
         <class>entity.UserEntity</class>
         <class>entity.ListEntity</class>
@@ -28,26 +28,6 @@
 
             <property name="eclipselink.application-location" value="/tmp"/>
             <property name="eclipselink.logging.level" value="ALL"/>
-        </properties>
-    </persistence-unit>
-
-    <persistence-unit name="h2test" transaction-type="RESOURCE_LOCAL">
-
-
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
-        <shared-cache-mode>NONE</shared-cache-mode>
-        <properties>
-            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;MODE=Oracle;DB_CLOSE_ON_EXIT=TRUE"/>
-            <property name="javax.persistence.jdbc.user" value="sa"/>
-            <property name="javax.persistence.jdbc.password" value="sa"/>
-            <property name="eclipselink.target-database" value="Oracle"/>
-            <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
-            <property name="eclipselink.create-ddl-jdbc-file-name" value="createDdl.sql"/>
-            <property name="eclipselink.drop-ddl-jdbc-file-name" value="dropDdl.sql"/>
-            <property name="eclipselink.ddl-generation.output-mode" value="both"/>
-            <property name="eclipselink.application-location" value="target"/>
-            <property name="eclipselink.logging.level" value="SEVERE"/>
         </properties>
     </persistence-unit>
 </persistence>
