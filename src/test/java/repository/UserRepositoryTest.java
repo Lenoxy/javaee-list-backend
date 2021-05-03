@@ -8,36 +8,42 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-@Testcontainers
+//@Testcontainers
+
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserRepositoryTest{
 
     //UserRepository sut;
-    @Container
-    final PostgreSQLContainer postgres = new PostgreSQLContainer(DockerImageName.parse("postgres:13.2"))
-            .withDatabaseName("list")
-            .withUsername("list")
-            .withPassword("eq7uC37qkQASSLcc");
+//    @Container
+//    final PostgreSQLContainer postgres = new PostgreSQLContainer(DockerImageName.parse("postgres:13.2"))
+//            .withDatabaseName("list")
+//            .withUsername("list")
+//            .withPassword("eq7uC37qkQASSLcc");
 
-    private EntityManager entityManager;
+    //@PersistenceContext(unitName = "TestPU")
+    EntityManager entityManager;
 
     @BeforeEach
     void setUp(){
-        String address = postgres.getHost();
-        //int port = postgres.getFirstMappedPort();
-        entityManager = Persistence.createEntityManagerFactory(
-                "list-testcontainers-db"
-        ).createEntityManager();
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("list-db-test");
+        entityManager = entityManagerFactory
+                .createEntityManager();
 
+        System.out.println("hello container");
+       // String address = postgres.getHost();
+        //int port = postgres.getFirstMappedPort();
     }
 
-    //@Test
+    @Test
     @Transactional
     void get(){
-        entityManager.createQuery("SELECT UserEntity FROM UserEntity ");
+        System.out.println("hello there");
+        entityManager.createQuery("SELECT UserEntity FROM UserEntity");
     }
 
     //@Test
