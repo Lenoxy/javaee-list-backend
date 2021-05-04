@@ -11,6 +11,7 @@ import org.testcontainers.utility.DockerImageName;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 
@@ -44,7 +45,11 @@ class UserRepositoryTest{
     @Transactional
     void get(){
         System.out.println("hello there");
-        entityManager.persist(new UserEntity(1, "User", "hashedPW", new ArrayList<ListEntity>()));
+        entityManager.persist(new UserEntity(0, "User", "hashedPW", new ArrayList<ListEntity>()));
+
+        //Query query = entityManager.createQuery("SELECT u FROM UserEntity AS u");
+        //System.out.println(((UserEntity)query.getSingleResult()).getUsername());
+
     }
 
     //@Test
