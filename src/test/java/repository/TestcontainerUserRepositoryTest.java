@@ -11,6 +11,7 @@ import org.testcontainers.utility.DockerImageName;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Testcontainers
-class UserRepositoryTest {
+class TestcontainerUserRepositoryTest{
 
     @Container
     final PostgreSQLContainer postgres = new PostgreSQLContainer(DockerImageName.parse("postgres:13.2"))
@@ -27,12 +28,11 @@ class UserRepositoryTest {
             .withUsername("list")
             .withPassword("eq7uC37qkQASSLcc");
     UserRepository sut;
-    //@PersistenceContext
     EntityManager entityManager;
 
     @BeforeEach
     void setUp() {
-        entityManager = Persistence.createEntityManagerFactory("list-db-test").createEntityManager();
+        entityManager = Persistence.createEntityManagerFactory("list-db-test-testcontainer").createEntityManager();
     }
 
     @Test

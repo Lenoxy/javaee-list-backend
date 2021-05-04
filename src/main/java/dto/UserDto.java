@@ -3,6 +3,7 @@ package dto;
 import entity.UserEntity;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserDto{
@@ -32,6 +33,19 @@ public class UserDto{
         }
 
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if(! (o instanceof UserDto)) return false;
+        UserDto userDto = (UserDto) o;
+        return id == userDto.id && username.equals(userDto.username) && passwordSHA256.equals(userDto.passwordSHA256) && Objects.equals(lists, userDto.lists);
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(id, username, passwordSHA256, lists);
     }
 
     public UserEntity toUserEntity(){

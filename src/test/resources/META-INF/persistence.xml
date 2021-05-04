@@ -5,7 +5,7 @@
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
                         http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
 
-    <persistence-unit name="list-db-test" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="list-db-test-testcontainer" transaction-type="RESOURCE_LOCAL">
 
         <class>entity.UserEntity</class>
         <class>entity.ListEntity</class>
@@ -17,9 +17,23 @@
             <property name="javax.persistence.jdbc.user" value="list"/>
             <property name="javax.persistence.jdbc.password" value="eq7uC37qkQASSLcc"/>
 
-            <property name="hibernate.connection.driver_class" value="org.testcontainers.jdbc.ContainerDatabaseDriver"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="list-db-test-h2" transaction-type="RESOURCE_LOCAL">
+        <class>entity.UserEntity</class>
+        <class>entity.ListEntity</class>
+        <class>entity.ItemEntity</class>
+
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=TRUE"/>            <property name="javax.persistence.jdbc.url" value="jdbc:tc:postgresql:///list"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value="sa"/>
+
+            <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+            <property name="eclipselink.target-database" value="PostgreSQL"/>
+            <property name="eclipselink.logging.level" value="SEVERE"/>
         </properties>
     </persistence-unit>
 </persistence>

@@ -16,7 +16,7 @@ public class UserRepository{
 
     @Transactional
     public UserDto get(UserDto userDto){
-        Query q = database.entityManager.createQuery(
+        Query q = database.getEntityManager().createQuery(
                 "SELECT u FROM UserEntity AS u " +
                         "WHERE u.username = :username AND " +
                         "u.passwordSHA256 = :passwordSHA256"
@@ -33,7 +33,7 @@ public class UserRepository{
 
     @Transactional
     public void removeById(int id){
-        Query q = database.entityManager.createQuery(
+        Query q = database.getEntityManager().createQuery(
                 "DELETE FROM UserEntity as u " +
                         "WHERE u.id = :id "
         );
@@ -41,14 +41,14 @@ public class UserRepository{
         int rowsAffected = q.executeUpdate();
 
         if(rowsAffected != 1){
-            database.entityManager.getTransaction().rollback();
+            database.getEntityManager().getTransaction().rollback();
         }
 
     }
 
     @Transactional
     public void add(UserDto userDto){
-        database.entityManager.persist(userDto.toUserEntity());
+        database.getEntityManager().persist(userDto.toUserEntity());
     }
 
     @Transactional

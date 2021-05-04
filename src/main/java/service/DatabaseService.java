@@ -9,5 +9,9 @@ import javax.persistence.PersistenceContext;
 @Startup
 public class DatabaseService{
     @PersistenceContext
-    public EntityManager entityManager;
+    private EntityManager entityManager;
+
+    public EntityManager getEntityManager(){
+        return entityManager;
+    }
 }
