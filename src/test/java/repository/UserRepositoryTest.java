@@ -1,5 +1,7 @@
 package repository;
 
+import entity.ListEntity;
+import entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -10,6 +12,7 @@ import org.testcontainers.utility.DockerImageName;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 
 @Testcontainers
 class UserRepositoryTest{
@@ -41,7 +44,7 @@ class UserRepositoryTest{
     @Transactional
     void get(){
         System.out.println("hello there");
-        entityManager.createQuery("SELECT UserEntity FROM UserEntity");
+        entityManager.persist(new UserEntity(1, "User", "hashedPW", new ArrayList<ListEntity>()));
     }
 
     //@Test

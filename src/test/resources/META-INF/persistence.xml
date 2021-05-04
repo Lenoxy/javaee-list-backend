@@ -6,8 +6,6 @@
                         http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
 
     <persistence-unit name="list-db-test" transaction-type="JTA">
-        <jta-data-source>jdbc/list_db_test</jta-data-source>
-        <non-jta-data-source>jdbc/list_db_test_unmanaged</non-jta-data-source>
 
         <class>entity.UserEntity</class>
         <class>entity.ListEntity</class>
@@ -15,19 +13,12 @@
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.testcontainers.jdbc.ContainerDatabaseDriver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:tc:mysql:5.7:///list"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:tc:postgresql:///list"/>
             <property name="javax.persistence.jdbc.user" value="list"/>
             <property name="javax.persistence.jdbc.password" value="eq7uC37qkQASSLcc"/>
 
-            <property name="eclipselink.target-database" value="PostgreSQL"/>
-
-            <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
-            <property name="eclipselink.ddl-generation.output-mode" value="both"/>
-            <property name="eclipselink.create-ddl-jdbc-file-name" value="createDdl.sql"/>
-            <property name="eclipselink.drop-ddl-jdbc-file-name" value="dropDdl.sql"/>
-
-            <property name="eclipselink.application-location" value="/tmp"/>
-            <property name="eclipselink.logging.level" value="ALL"/>
+            <property name="hibernate.connection.driver_class" value="org.testcontainers.jdbc.ContainerDatabaseDriver"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
         </properties>
     </persistence-unit>
 </persistence>
