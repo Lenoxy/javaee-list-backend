@@ -15,6 +15,7 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Testcontainers
@@ -31,22 +32,12 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        System.out.println("hello container");
         entityManager = Persistence.createEntityManagerFactory("list-db-test").createEntityManager();
-        // ...
-        // https://www.eclipse.org/eclipselink/api/2.7/org/eclipse/persistence/platform/server/NoServerPlatform.html
-        //
-        // org.eclipse.persistence.platform.server.NoServerPlatform
-        // PUBLIC: This platform is used when EclipseLink is not within any server (Oc4j, WebLogic, ...) This is also the default platform for all newly created DatabaseSessions. This platform has: - No external transaction controller class - No runtime services (JMX/MBean) - No launching of container Threads
-        //
-        // -> Currently trying to use hibernate instead
-        // Error parsing JNDI name [jdbc/list_db_test]
     }
 
     @Test
     @Transactional
     void get() {
-        System.out.println("hello there");
         ListEntity listEntity = new ListEntity();
         listEntity.setTitle("test");
         List<ListEntity> listEntities = Arrays.asList(listEntity);
@@ -59,7 +50,6 @@ class UserRepositoryTest {
         List resultList = entityManager.createQuery("SELECT u FROM UserEntity AS u").getResultList();
 
         System.out.println(resultList);
-
     }
 
     //@Test
