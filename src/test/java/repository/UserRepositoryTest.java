@@ -14,9 +14,11 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Testcontainers
-class UserRepositoryTest{
+class UserRepositoryTest {
 
     @Container
     final PostgreSQLContainer postgres = new PostgreSQLContainer(DockerImageName.parse("postgres:13.2"))
@@ -28,7 +30,7 @@ class UserRepositoryTest{
     EntityManager entityManager;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         System.out.println("hello container");
         entityManager = Persistence.createEntityManagerFactory("list-db-test").createEntityManager();
         // ...
@@ -43,24 +45,32 @@ class UserRepositoryTest{
 
     @Test
     @Transactional
-    void get(){
+    void get() {
         System.out.println("hello there");
-        entityManager.persist(new UserEntity(0, "User", "hashedPW", new ArrayList<ListEntity>()));
+        ListEntity listEntity = new ListEntity();
+        listEntity.setTitle("test");
+        List<ListEntity> listEntities = Arrays.asList(listEntity);
+        UserEntity userEntity = new UserEntity(0, "User", "hashedPW", listEntities);
 
-        //Query query = entityManager.createQuery("SELECT u FROM UserEntity AS u");
-        //System.out.println(((UserEntity)query.getSingleResult()).getUsername());
+        entityManager.getTransaction().begin();
+        entityManager.persist(userEntity);
+        entityManager.getTransaction().commit();
+
+        List resultList = entityManager.createQuery("SELECT u FROM UserEntity AS u").getResultList();
+
+        System.out.println(resultList);
 
     }
 
     //@Test
-    void removeById(){
+    void removeById() {
     }
 
     //@Test
-    void add(){
+    void add() {
     }
 
     //@Test
-    void modifyById(){
+    void modifyById() {
     }
 }
