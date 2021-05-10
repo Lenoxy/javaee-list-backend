@@ -38,7 +38,7 @@ public class UserResource{
     }
 
     private boolean isCorrectCredentials(UserDto userDto){
-        UserDto responseUserDto = userRepository.get(userDto);
+        UserDto responseUserDto = userRepository.getByUsernameAndPassword(userDto.getUsername(), userDto.getPasswordSHA256());
         return responseUserDto != null;
     }
 

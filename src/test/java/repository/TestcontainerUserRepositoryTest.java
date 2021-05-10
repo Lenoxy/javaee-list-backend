@@ -1,11 +1,8 @@
 package repository;
 
-import dto.ListDto;
 import dto.UserDto;
 import dto.a;
-import entity.ListEntity;
 import entity.UserEntity;
-import org.h2.engine.Database;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +19,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,38 +52,56 @@ class TestcontainerUserRepositoryTest{
     @Test
     @Transactional
     void get(){
-        UserDto expected = a.UserDtoBuilder().withId(1).build();
+        UserDto expected = a.UserDtoBuilder().build();
 
         entityManager.getTransaction().begin();
         entityManager.persist(expected.toUserEntity());
         entityManager.getTransaction().commit();
 
-        UserDto actual = sut.get(expected);
+        UserDto actual = sut.getByUsernameAndPassword(expected.getUsername(), expected.getPasswordSHA256());
 
-        assertThat(expected).usingRecursiveComparison().isEqualTo(actual);
+        assertThat(expected)
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(actual);
     }
 
-    //@Test
+    @Test
     void removeById(){
+        UserDto expected = a.UserDtoBuilder().build();
+
+        entityManager.getTransaction().begin();
+        entityManager.persist(expected.toUserEntity());
+        entityManager.getTransaction().commit();
+
+        assertThat(getAllPersistedUsers()).isNotEmpty();
+
+        UserDto userDto = sut.getByUsernameAndPassword(expected.getUsername(), expected.getPasswordSHA256());
+
+        entityManager.getTransaction().begin();
+        sut.removeById(userDto.getId());
+        entityManager.getTransaction().commit();
+
+        assertThat(getAllPersistedUsers()).isEmpty();
     }
 
     @Test
     void add(){
-        // TODO Search Kuzu-Leistung for alternatives
-        entityManager.getTransaction().begin();
         UserDto expected = a.UserDtoBuilder().build();
+
+        entityManager.getTransaction().begin();
         sut.add(expected);
         entityManager.getTransaction().commit();
 
-        entityManager.getTransaction().begin();
-        Query query = entityManager.createQuery("SELECT u FROM UserEntity u");
-        List resultList = query.getResultList();
-        entityManager.getTransaction().commit();
-
-        assertThat(resultList).isNotEmpty();
+        assertThat(getAllPersistedUsers()).isNotEmpty();
     }
 
     //@Test
     void modifyById(){
+    }
+
+
+    List<UserEntity> getAllPersistedUsers(){
+        return entityManager.createQuery("SELECT u FROM UserEntity u").getResultList();
     }
 }

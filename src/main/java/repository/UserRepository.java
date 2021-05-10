@@ -15,14 +15,14 @@ public class UserRepository{
     DatabaseService database;
 
     @Transactional
-    public UserDto get(UserDto userDto){
+    public UserDto getByUsernameAndPassword(String username, String passwordSHA256){
         Query q = database.getEntityManager().createQuery(
                 "SELECT u FROM UserEntity AS u " +
                         "WHERE u.username = :username AND " +
                         "u.passwordSHA256 = :passwordSHA256"
         );
-        q.setParameter("username", userDto.getUsername());
-        q.setParameter("passwordSHA256", userDto.getPasswordSHA256());
+        q.setParameter("username", username);
+        q.setParameter("passwordSHA256", passwordSHA256);
 
         if(q.getResultList().size() == 1){
             return ((UserEntity) q.getSingleResult()).toUserDto();
