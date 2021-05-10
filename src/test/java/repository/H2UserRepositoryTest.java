@@ -3,6 +3,7 @@ package repository;
 import dto.UserDto;
 import dto.a;
 import entity.UserEntity;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,8 +23,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class H2UserRepositoryTest{
-
-
     EntityManager entityManager;
 
     @Mock
@@ -39,10 +38,18 @@ public class H2UserRepositoryTest{
         when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
     }
 
+    @AfterEach
+    void tearDown(){
+        entityManager.getTransaction().begin();
+        entityManager.createQuery("DELETE FROM UserEntity e").executeUpdate();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
     @Test
     @Transactional
     void get(){
-        UserDto expected = a.UserDtoBuilder().withId(1).build();
+        UserDto expected = a.UserDtoBuilder().build();
         entityManager.getTransaction().begin();
         sut.add(expected);
         entityManager.getTransaction().commit();
@@ -50,7 +57,7 @@ public class H2UserRepositoryTest{
 
         UserDto actual = sut.getByUsernameAndPassword(expected.getUsername(), expected.getPasswordSHA256());
 
-        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+        assertThat(actual).usingRecursiveComparison().ignoringFields("id").isEqualTo(expected);
     }
 
     @Test

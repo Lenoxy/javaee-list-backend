@@ -51,9 +51,7 @@ class JwtFilterTest{
         when(ctxMock.getHeaderString(HttpHeaders.AUTHORIZATION)).thenReturn(null);
         assertThatThrownBy(
                 () -> sut.filter(ctxMock)
-
-        )
-                .isInstanceOf(BearerMissingException.class);
+        ).isInstanceOf(BearerMissingException.class);
     }
 
     @Test
@@ -64,8 +62,7 @@ class JwtFilterTest{
 
         assertThatThrownBy(
                 () -> sut.filter(ctxMock)
-        )
-                .isInstanceOf(BearerInvalidException.class);
+        ).isInstanceOf(BearerInvalidException.class);
     }
 
     @Test
@@ -77,7 +74,6 @@ class JwtFilterTest{
 
         assertThatThrownBy(
                 () -> sut.filter(ctxMock)
-        )
-                .isInstanceOf(UserClaimMissingException.class);
+        ).isInstanceOf(UserClaimMissingException.class);
     }
 }
