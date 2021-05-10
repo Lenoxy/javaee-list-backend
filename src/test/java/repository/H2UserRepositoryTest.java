@@ -40,17 +40,23 @@ public class H2UserRepositoryTest{
     @Test
     @Transactional
     void get(){
+        // Return entity manager pointing to the H2 DB
         when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
-        UserDto expected = a.UserDtoBuilder().build();
+
+        UserDto expected = a.UserDtoBuilder().withId(1).build();
+        entityManager.getTransaction().begin();
         sut.add(expected);
+        entityManager.getTransaction().commit();
+
 
         UserDto actual = sut.get(expected);
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
     void add(){
+        // Return entity manager pointing to the H2 DB
         when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
 
         // TODO Search Kuzu-Leistung for alternatives

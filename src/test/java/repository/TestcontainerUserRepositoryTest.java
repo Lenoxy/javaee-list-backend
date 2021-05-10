@@ -1,25 +1,35 @@
 package repository;
 
+import dto.ListDto;
+import dto.UserDto;
+import dto.a;
 import entity.ListEntity;
 import entity.UserEntity;
+import org.h2.engine.Database;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+import service.DatabaseService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 @Testcontainers
+@ExtendWith(MockitoExtension.class)
 class TestcontainerUserRepositoryTest{
 
     @Container
@@ -27,40 +37,57 @@ class TestcontainerUserRepositoryTest{
             .withDatabaseName("list")
             .withUsername("list")
             .withPassword("eq7uC37qkQASSLcc");
-    UserRepository sut;
+
+    @Mock
+    DatabaseService databaseServiceMock;
+
+    @InjectMocks
+    UserRepository sut = new UserRepository();
     EntityManager entityManager;
 
+
+
     @BeforeEach
-    void setUp() {
+    void setUp(){
         entityManager = Persistence.createEntityManagerFactory("list-db-test-testcontainer").createEntityManager();
+        when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
     }
 
     @Test
     @Transactional
-    void get() {
-        ListEntity listEntity = new ListEntity();
-        listEntity.setTitle("test");
-        List<ListEntity> listEntities = Arrays.asList(listEntity);
-        UserEntity userEntity = new UserEntity(0, "User", "hashedPW", listEntities);
+    void get(){
+        UserDto expected = a.UserDtoBuilder().withId(1).build();
 
         entityManager.getTransaction().begin();
-        entityManager.persist(userEntity);
+        entityManager.persist(expected.toUserEntity());
         entityManager.getTransaction().commit();
 
-        List resultList = entityManager.createQuery("SELECT u FROM UserEntity AS u").getResultList();
+        UserDto actual = sut.get(expected);
 
-        System.out.println(resultList);
+        assertThat(expected).usingRecursiveComparison().isEqualTo(actual);
     }
 
     //@Test
-    void removeById() {
+    void removeById(){
+    }
+
+    @Test
+    void add(){
+        // TODO Search Kuzu-Leistung for alternatives
+        entityManager.getTransaction().begin();
+        UserDto expected = a.UserDtoBuilder().build();
+        sut.add(expected);
+        entityManager.getTransaction().commit();
+
+        entityManager.getTransaction().begin();
+        Query query = entityManager.createQuery("SELECT u FROM UserEntity u");
+        List resultList = query.getResultList();
+        entityManager.getTransaction().commit();
+
+        assertThat(resultList).isNotEmpty();
     }
 
     //@Test
-    void add() {
-    }
-
-    //@Test
-    void modifyById() {
+    void modifyById(){
     }
 }
