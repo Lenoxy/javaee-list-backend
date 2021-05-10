@@ -3,6 +3,7 @@ package repository;
 import dto.UserDto;
 import dto.a;
 import entity.UserEntity;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,6 +49,15 @@ class TestcontainerUserRepositoryTest{
         entityManager = Persistence.createEntityManagerFactory("list-db-test-testcontainer").createEntityManager();
         when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
     }
+
+    @AfterEach
+    void tearDown(){
+        entityManager.getTransaction().begin();
+        entityManager.createQuery("DELETE FROM UserEntity e").executeUpdate();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
 
     @Test
     @Transactional
