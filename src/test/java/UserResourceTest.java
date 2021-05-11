@@ -29,7 +29,7 @@ class UserResourceTest{
     @Test
     void loginTest(){
         UserDto userDto = new UserDto(0, "c3d4856944538698d6cf217896afb58df4478e0f902a1c84bf897779c644deec", "username", null);
-        when(userRepositoryMock.getByUsernameAndPassword(anyString(), anyString())).thenReturn(userDto);
+        when(userRepositoryMock.getByUsernameAndPassword(anyString(), anyString())).thenReturn(userDto.toUserEntity());
         when(jwtServiceMock.createJwt(any())).thenReturn("testJWT");
 
         String jwt = (String) sut.login(userDto).getEntity();

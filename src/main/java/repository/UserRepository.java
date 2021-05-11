@@ -1,6 +1,5 @@
 package repository;
 
-import dto.UserDto;
 import entity.UserEntity;
 import service.DatabaseService;
 
@@ -15,7 +14,7 @@ public class UserRepository{
     DatabaseService database;
 
     @Transactional
-    public UserDto getByUsernameAndPassword(String username, String passwordSHA256){
+    public UserEntity getByUsernameAndPassword(String username, String passwordSHA256){
         Query q = database.getEntityManager().createQuery(
                 "SELECT u FROM UserEntity AS u " +
                         "WHERE u.username = :username AND " +
@@ -25,7 +24,7 @@ public class UserRepository{
         q.setParameter("passwordSHA256", passwordSHA256);
 
         if(q.getResultList().size() == 1){
-            return ((UserEntity) q.getSingleResult()).toUserDto();
+            return (UserEntity) q.getSingleResult();
         }else{
             return null;
         }
@@ -47,12 +46,22 @@ public class UserRepository{
     }
 
     @Transactional
-    public void add(UserDto userDto){
-        database.getEntityManager().persist(userDto.toUserEntity());
+    public void add(UserEntity userEntity){
+        database.getEntityManager().persist(userEntity);
     }
 
     @Transactional
-    public Object modifyById(int id){
-        return null;
+    public void modifyById(int id, UserEntity userEntity){
+        Query query = database.getEntityManager().createQuery(
+                "UPDATE UserEntity u SET " +
+                        "u.username = :username, " +
+                        "u.passwordSHA256 = :passwordSHA256 " +
+                        "WHERE u.id = :id");
+        query.setParameter("username", userEntity.getUsername());
+        query.setParameter("passwordSHA256", userEntity.getPasswordSHA256());
+        query.setParameter("id", id);
+        if(query.executeUpdate() != 1){
+            throw new RuntimeException("The user could not not be updated");
+        }
     }
 }

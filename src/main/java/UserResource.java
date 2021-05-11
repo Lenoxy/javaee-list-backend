@@ -38,7 +38,7 @@ public class UserResource{
     }
 
     private boolean isCorrectCredentials(UserDto userDto){
-        UserDto responseUserDto = userRepository.getByUsernameAndPassword(userDto.getUsername(), userDto.getPasswordSHA256());
+        UserDto responseUserDto = userRepository.getByUsernameAndPassword(userDto.getUsername(), userDto.getPasswordSHA256()).toUserDto();
         return responseUserDto != null;
     }
 
@@ -52,7 +52,7 @@ public class UserResource{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        userRepository.add(userDto);
+        userRepository.add(userDto.toUserEntity());
 
         // User is logged in automatically
         return Response

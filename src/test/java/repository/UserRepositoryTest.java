@@ -1,10 +1,8 @@
 package repository;
 
-import dto.UserDto;
-import dto.a;
 import entity.UserEntity;
+import entity.a;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -42,12 +40,8 @@ class UserRepositoryTest{
 
     @InjectMocks
     UserRepository sut = new UserRepository();
+
     EntityManager entityManager;
-
-
-    @BeforeEach
-    void setUp(){
-    }
 
     @AfterEach
     void tearDown(){
@@ -63,13 +57,13 @@ class UserRepositoryTest{
     void get(String persistenceUnit){
         entityManager = setupEntityManager(persistenceUnit);
 
-        UserDto expected = a.UserDtoBuilder().build();
+        UserEntity expected = a.UserEntityBuilder().build();
 
         entityManager.getTransaction().begin();
-        entityManager.persist(expected.toUserEntity());
+        entityManager.persist(expected);
         entityManager.getTransaction().commit();
 
-        UserDto actual = sut.getByUsernameAndPassword(expected.getUsername(), expected.getPasswordSHA256());
+        UserEntity actual = sut.getByUsernameAndPassword(expected.getUsername(), expected.getPasswordSHA256());
 
         assertThat(expected)
                 .usingRecursiveComparison()
@@ -82,15 +76,15 @@ class UserRepositoryTest{
     void removeById(String persistenceUnit){
         entityManager = setupEntityManager(persistenceUnit);
 
-        UserDto expected = a.UserDtoBuilder().build();
+        UserEntity expected = a.UserEntityBuilder().build();
         entityManager.getTransaction().begin();
-        entityManager.persist(expected.toUserEntity());
+        entityManager.persist(expected);
         entityManager.getTransaction().commit();
         assertThat(getAllPersistedUsers()).isNotEmpty();
-        UserDto userDto = sut.getByUsernameAndPassword(expected.getUsername(), expected.getPasswordSHA256());
+        UserEntity userEntity = sut.getByUsernameAndPassword(expected.getUsername(), expected.getPasswordSHA256());
 
         entityManager.getTransaction().begin();
-        sut.removeById(userDto.getId());
+        sut.removeById(userEntity.getId());
         entityManager.getTransaction().commit();
 
         assertThat(getAllPersistedUsers()).isEmpty();
@@ -101,7 +95,7 @@ class UserRepositoryTest{
     void add(String persistenceUnit){
         entityManager = setupEntityManager(persistenceUnit);
 
-        UserDto expected = a.UserDtoBuilder().build();
+        UserEntity expected = a.UserEntityBuilder().build();
 
         entityManager.getTransaction().begin();
         sut.add(expected);
@@ -110,8 +104,27 @@ class UserRepositoryTest{
         assertThat(getAllPersistedUsers()).isNotEmpty();
     }
 
-    //@Test
-    void modifyById(){
+    @ParameterizedTest
+    @ValueSource(strings = {TESTCONTAINERS_PERSISTENCE_UNIT, H2_PERSISTENCE_UNIT})
+    void modifyById(String persistenceUnit){
+        entityManager = setupEntityManager(persistenceUnit);
+
+        UserEntity unchangedUserEntity = a.UserEntityBuilder().build();
+        entityManager.getTransaction().begin();
+        sut.add(unchangedUserEntity);
+        entityManager.getTransaction().commit();
+        assertThat(getAllPersistedUsers()).isNotEmpty();
+        UserEntity userEntityWithIdSet = sut.getByUsernameAndPassword(unchangedUserEntity.getUsername(), unchangedUserEntity.getPasswordSHA256());
+        userEntityWithIdSet.setUsername("new-username");
+        userEntityWithIdSet.setPasswordSHA256("new-password");
+
+        entityManager.getTransaction().begin();
+        sut.modifyById(userEntityWithIdSet.getId(), userEntityWithIdSet);
+        entityManager.getTransaction().commit();
+
+        assertThat(getAllPersistedUsers().size()).isEqualTo(1);
+        assertThat(getAllPersistedUsers().get(0)).isEqualTo(userEntityWithIdSet);
+
     }
 
     private EntityManager setupEntityManager(String persistenceUnit){
@@ -121,7 +134,7 @@ class UserRepositoryTest{
     }
 
 
-    List<UserEntity> getAllPersistedUsers(){
+    private List<UserEntity> getAllPersistedUsers(){
         return entityManager.createQuery("SELECT u FROM UserEntity u").getResultList();
     }
 }
