@@ -3,11 +3,16 @@ package repository;
 import entity.UserEntity;
 import entity.a;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -18,16 +23,20 @@ import service.DatabaseService;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
+@TestInstance(PER_CLASS)
 @Testcontainers
-@ExtendWith(MockitoExtension.class)
 class UserRepositoryTest{
 
-    final String H2_PERSISTENCE_UNIT = "list-db-test-h2";
-    final String TESTCONTAINERS_PERSISTENCE_UNIT = "list-db-test-testcontainer";
+    final static String H2_PERSISTENCE_UNIT = "list-db-test-h2";
+    final static String TESTCONTAINERS_PERSISTENCE_UNIT = "list-db-test-testcontainer";
 
     @Container
     final PostgreSQLContainer postgres = new PostgreSQLContainer(DockerImageName.parse("postgres:13.2"))
@@ -41,22 +50,24 @@ class UserRepositoryTest{
     @InjectMocks
     UserRepository sut = new UserRepository();
 
-    EntityManager entityManager;
+    @BeforeEach
+    void setUp(){
+        MockitoAnnotations.initMocks(this);
+    }
 
     @AfterEach
     void tearDown(){
-        entityManager.getTransaction().begin();
-        entityManager.createQuery("DELETE FROM UserEntity e").executeUpdate();
-        entityManager.getTransaction().commit();
-        entityManager.close();
+        // Abusing the mock
+        databaseServiceMock.getEntityManager().getTransaction().begin();
+        databaseServiceMock.getEntityManager().createQuery("DELETE FROM UserEntity e").executeUpdate();
+        databaseServiceMock.getEntityManager().getTransaction().commit();
+        databaseServiceMock.getEntityManager().close();
     }
 
 
     @ParameterizedTest
-    @ValueSource(strings = {TESTCONTAINERS_PERSISTENCE_UNIT, H2_PERSISTENCE_UNIT})
-    void get(String persistenceUnit){
-        entityManager = setupEntityManager(persistenceUnit);
-
+    @MethodSource(value = "provideEntityManagers")
+    void get(EntityManager entityManager){
         UserEntity expected = a.UserEntityBuilder().build();
 
         entityManager.getTransaction().begin();
@@ -72,48 +83,42 @@ class UserRepositoryTest{
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {TESTCONTAINERS_PERSISTENCE_UNIT, H2_PERSISTENCE_UNIT})
-    void removeById(String persistenceUnit){
-        entityManager = setupEntityManager(persistenceUnit);
-
+    @MethodSource(value = "provideEntityManagers")
+    void removeById(EntityManager entityManager){
         UserEntity expected = a.UserEntityBuilder().build();
         entityManager.getTransaction().begin();
         entityManager.persist(expected);
         entityManager.getTransaction().commit();
-        assertThat(getAllPersistedUsers()).isNotEmpty();
+        assertThat(getAllPersistedUsers(entityManager)).isNotEmpty();
         UserEntity userEntity = sut.getByUsernameAndPassword(expected.getUsername(), expected.getPasswordSHA256());
 
         entityManager.getTransaction().begin();
         sut.removeById(userEntity.getId());
         entityManager.getTransaction().commit();
 
-        assertThat(getAllPersistedUsers()).isEmpty();
+        assertThat(getAllPersistedUsers(entityManager)).isEmpty();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {TESTCONTAINERS_PERSISTENCE_UNIT, H2_PERSISTENCE_UNIT})
-    void add(String persistenceUnit){
-        entityManager = setupEntityManager(persistenceUnit);
-
+    @MethodSource(value = "provideEntityManagers")
+    void add(EntityManager entityManager){
         UserEntity expected = a.UserEntityBuilder().build();
 
         entityManager.getTransaction().begin();
         sut.add(expected);
         entityManager.getTransaction().commit();
 
-        assertThat(getAllPersistedUsers()).isNotEmpty();
+        assertThat(getAllPersistedUsers(entityManager)).isNotEmpty();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {TESTCONTAINERS_PERSISTENCE_UNIT, H2_PERSISTENCE_UNIT})
-    void modifyById(String persistenceUnit){
-        entityManager = setupEntityManager(persistenceUnit);
-
+    @MethodSource(value = "provideEntityManagers")
+    void modifyById(EntityManager entityManager){
         UserEntity unchangedUserEntity = a.UserEntityBuilder().build();
         entityManager.getTransaction().begin();
         sut.add(unchangedUserEntity);
         entityManager.getTransaction().commit();
-        assertThat(getAllPersistedUsers()).isNotEmpty();
+        assertThat(getAllPersistedUsers(entityManager)).isNotEmpty();
         UserEntity userEntityWithIdSet = sut.getByUsernameAndPassword(unchangedUserEntity.getUsername(), unchangedUserEntity.getPasswordSHA256());
         userEntityWithIdSet.setUsername("new-username");
         userEntityWithIdSet.setPasswordSHA256("new-password");
@@ -122,19 +127,25 @@ class UserRepositoryTest{
         sut.modifyById(userEntityWithIdSet.getId(), userEntityWithIdSet);
         entityManager.getTransaction().commit();
 
-        assertThat(getAllPersistedUsers().size()).isEqualTo(1);
-        assertThat(getAllPersistedUsers().get(0)).isEqualTo(userEntityWithIdSet);
+        assertThat(getAllPersistedUsers(entityManager).size()).isEqualTo(1);
+        assertThat(getAllPersistedUsers(entityManager).get(0)).isEqualTo(userEntityWithIdSet);
 
     }
 
-    private EntityManager setupEntityManager(String persistenceUnit){
+    private List<UserEntity> getAllPersistedUsers(EntityManager entityManager){
+        return entityManager.createQuery("SELECT u FROM UserEntity u").getResultList();
+    }
+
+    private Stream<EntityManager> provideEntityManagers(){
+        return Stream.of(
+                getEntityManager(TESTCONTAINERS_PERSISTENCE_UNIT),
+                getEntityManager(H2_PERSISTENCE_UNIT)
+        );
+    }
+
+    private EntityManager getEntityManager(String persistenceUnit){
         EntityManager em = Persistence.createEntityManagerFactory(persistenceUnit).createEntityManager();
         when(databaseServiceMock.getEntityManager()).thenReturn(em);
         return em;
-    }
-
-
-    private List<UserEntity> getAllPersistedUsers(){
-        return entityManager.createQuery("SELECT u FROM UserEntity u").getResultList();
     }
 }
