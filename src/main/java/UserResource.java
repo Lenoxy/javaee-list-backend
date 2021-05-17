@@ -13,10 +13,10 @@ import javax.ws.rs.core.Response;
 public class UserResource{
 
     @Inject
-    JWTService jwtService;
+    private JWTService jwtService;
 
     @Inject
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Path("/login")
     @PUT
