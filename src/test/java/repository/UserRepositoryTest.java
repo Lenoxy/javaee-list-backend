@@ -31,7 +31,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-@TestInstance(PER_CLASS)
 @Testcontainers
 class UserRepositoryTest{
 
@@ -48,10 +47,11 @@ class UserRepositoryTest{
     DatabaseService databaseServiceMock;
 
     @InjectMocks
-    UserRepository sut = new UserRepository();
+    UserRepository sut;
 
     @BeforeEach
     void setUp(){
+        // Somehow the mocks are not automatically initialized
         MockitoAnnotations.initMocks(this);
     }
 
@@ -68,6 +68,9 @@ class UserRepositoryTest{
     @ParameterizedTest
     @MethodSource(value = "provideEntityManagers")
     void get(EntityManager entityManager){
+        // This function cannot be called outside of the @Test scope
+        when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
+
         UserEntity expected = a.UserEntityBuilder().build();
 
         entityManager.getTransaction().begin();
@@ -85,6 +88,9 @@ class UserRepositoryTest{
     @ParameterizedTest
     @MethodSource(value = "provideEntityManagers")
     void removeById(EntityManager entityManager){
+        // This function cannot be called outside of the @Test scope
+        when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
+
         UserEntity expected = a.UserEntityBuilder().build();
         entityManager.getTransaction().begin();
         entityManager.persist(expected);
@@ -102,6 +108,9 @@ class UserRepositoryTest{
     @ParameterizedTest
     @MethodSource(value = "provideEntityManagers")
     void add(EntityManager entityManager){
+        // This function cannot be called outside of the @Test scope
+        when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
+
         UserEntity expected = a.UserEntityBuilder().build();
 
         entityManager.getTransaction().begin();
@@ -114,6 +123,9 @@ class UserRepositoryTest{
     @ParameterizedTest
     @MethodSource(value = "provideEntityManagers")
     void modifyById(EntityManager entityManager){
+        // This function cannot be called outside of the @Test scope
+        when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
+
         UserEntity unchangedUserEntity = a.UserEntityBuilder().build();
         entityManager.getTransaction().begin();
         sut.add(unchangedUserEntity);
@@ -136,16 +148,10 @@ class UserRepositoryTest{
         return entityManager.createQuery("SELECT u FROM UserEntity u").getResultList();
     }
 
-    private Stream<EntityManager> provideEntityManagers(){
+    private static Stream<EntityManager> provideEntityManagers(){
         return Stream.of(
-                getEntityManager(TESTCONTAINERS_PERSISTENCE_UNIT),
-                getEntityManager(H2_PERSISTENCE_UNIT)
+                Persistence.createEntityManagerFactory(H2_PERSISTENCE_UNIT).createEntityManager(),
+                Persistence.createEntityManagerFactory(TESTCONTAINERS_PERSISTENCE_UNIT).createEntityManager()
         );
-    }
-
-    private EntityManager getEntityManager(String persistenceUnit){
-        EntityManager em = Persistence.createEntityManagerFactory(persistenceUnit).createEntityManager();
-        when(databaseServiceMock.getEntityManager()).thenReturn(em);
-        return em;
     }
 }
