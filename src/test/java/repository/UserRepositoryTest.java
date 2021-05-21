@@ -4,8 +4,6 @@ import entity.UserEntity;
 import entity.a;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
@@ -13,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -26,8 +23,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,6 +44,13 @@ class UserRepositoryTest{
     @InjectMocks
     UserRepository sut;
 
+    private static Stream<EntityManager> provideEntityManagers(){
+        return Stream.of(
+                Persistence.createEntityManagerFactory(H2_PERSISTENCE_UNIT).createEntityManager(),
+                Persistence.createEntityManagerFactory(TESTCONTAINERS_PERSISTENCE_UNIT).createEntityManager()
+        );
+    }
+
     @BeforeEach
     void setUp(){
         // Somehow the mocks are not automatically initialized
@@ -63,7 +65,6 @@ class UserRepositoryTest{
         databaseServiceMock.getEntityManager().getTransaction().commit();
         databaseServiceMock.getEntityManager().close();
     }
-
 
     @ParameterizedTest
     @MethodSource(value = "provideEntityManagers")
@@ -146,12 +147,5 @@ class UserRepositoryTest{
 
     private List<UserEntity> getAllPersistedUsers(EntityManager entityManager){
         return entityManager.createQuery("SELECT u FROM UserEntity u").getResultList();
-    }
-
-    private static Stream<EntityManager> provideEntityManagers(){
-        return Stream.of(
-                Persistence.createEntityManagerFactory(H2_PERSISTENCE_UNIT).createEntityManager(),
-                Persistence.createEntityManagerFactory(TESTCONTAINERS_PERSISTENCE_UNIT).createEntityManager()
-        );
     }
 }

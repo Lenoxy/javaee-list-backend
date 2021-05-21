@@ -19,6 +19,8 @@ public class JWTService{
             .withClaimPresence("user")
             .build();
 
+    public JWTService(){
+    }
 
     public String createJwt(UserDto userDto){
         return JWT.create()

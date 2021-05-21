@@ -1,35 +1,36 @@
-import dto.a;
-import org.jboss.weld.junit5.EnableWeld;
-import org.jboss.weld.junit5.WeldInitiator;
-import org.jboss.weld.junit5.WeldSetup;
+import org.jboss.weld.junit5.WeldJunit5Extension;
 import org.junit.jupiter.api.Test;
-import repository.UserRepository;
-import service.DatabaseService;
-import service.JWTService;
+import org.junit.jupiter.api.extension.ExtendWith;
+import service.SomeCDIBean;
 
-import javax.persistence.Persistence;
+import javax.inject.Inject;
 
-@EnableWeld
+//@EnableWeld
+@ExtendWith(WeldJunit5Extension.class)
 class UserComponentTest{
 
-    final static String H2_PERSISTENCE_UNIT = "list-db-test-h2";
+  //  final static String H2_PERSISTENCE_UNIT = "list-db-test-h2";
 
-    @WeldSetup // This tells weld to consider only Bar, nothing else
-    public WeldInitiator weld =
-            WeldInitiator.from(
-                    UserRepository.class,
-                    JWTService.class,
-                    DatabaseService.class,
-                    UserResource.class
-            )
-            .setPersistenceContextFactory(i -> Persistence.createEntityManagerFactory(H2_PERSISTENCE_UNIT).createEntityManager())
-            .build();
+//    @WeldSetup
+//    public WeldInitiator weld =
+//            WeldInitiator.from(
+//                    //UserRepository.class,
+//                    JWTService.class
+//                    //DatabaseService.class
+//            )
+//                    //.setPersistenceContextFactory(i -> Persistence.createEntityManagerFactory(H2_PERSISTENCE_UNIT).createEntityManager())
+//                    .build();
+@Inject
+SomeCDIBean jwtService;
 
 
     @Test
-    void loginTest(){
-        final UserResource sut = weld.select(UserResource.class).get();
-        sut.login(a.UserDtoBuilder().build());
+    public void loginTest(){
+        //JWTService select = weld.select(JWTService.class).get();
+
+        System.out.println("select.toString() = " + jwtService.toString());
+
+//        sut.login(a.UserDtoBuilder().build());
     }
 
     @Test
