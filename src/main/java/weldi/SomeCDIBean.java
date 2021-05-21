@@ -1,4 +1,4 @@
-package service;
+package weldi;
 
 import javax.enterprise.context.Dependent;
 
