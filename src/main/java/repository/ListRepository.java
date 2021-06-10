@@ -15,7 +15,7 @@ public class ListRepository{
     DatabaseService database;
 
     public List<ListDto> getListByUserId(UserDto user){
-        Query query = database.getEntityManager().createQuery("SELECT l FROM ListEntity AS l " +
+        Query query = database.getEM().createQuery("SELECT l FROM ListEntity AS l " +
                 "WHERE l.owner = :ownerId");
         query.setParameter("ownerId", user.toUserEntity());
         return (List<ListDto>) query.getResultList();
@@ -25,16 +25,16 @@ public class ListRepository{
         UserEntity userEntity = owner.toUserEntity();
 
         userEntity.addListEntity(new ListEntity(listTitle));
-        database.getEntityManager().persist(userEntity);
+        database.getEM().persist(userEntity);
     }
 
     public void removeList(ListDto listDto){
-        Query query = database.getEntityManager().createQuery("DELETE FROM ListEntity l  WHERE l.id = :id");
+        Query query = database.getEM().createQuery("DELETE FROM ListEntity l  WHERE l.id = :id");
         query.setParameter("id", listDto.toListEntity().getId());
     }
 
     public ListEntity getListById(int listId){
-        Query query = database.getEntityManager().createQuery("SELECT l FROM ListEntity AS l " +
+        Query query = database.getEM().createQuery("SELECT l FROM ListEntity AS l " +
                 "WHERE l.id = :id");
         query.setParameter("id", listId);
         return (ListEntity) query.getSingleResult();

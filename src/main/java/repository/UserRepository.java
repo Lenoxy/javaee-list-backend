@@ -15,7 +15,7 @@ public class UserRepository{
 
     @Transactional
     public UserEntity getByUsernameAndPassword(String username, String passwordSHA256){
-        Query q = database.getEntityManager().createQuery(
+        Query q = database.getEM().createQuery(
                 "SELECT u FROM UserEntity AS u " +
                         "WHERE u.username = :username AND " +
                         "u.passwordSHA256 = :passwordSHA256"
@@ -32,7 +32,7 @@ public class UserRepository{
 
     @Transactional
     public void removeById(int id){
-        Query q = database.getEntityManager().createQuery(
+        Query q = database.getEM().createQuery(
                 "DELETE FROM UserEntity as u " +
                         "WHERE u.id = :id "
         );
@@ -40,19 +40,20 @@ public class UserRepository{
         int rowsAffected = q.executeUpdate();
 
         if(rowsAffected != 1){
-            database.getEntityManager().getTransaction().rollback();
+            database.getEM().getTransaction().rollback();
         }
 
     }
 
-    @Transactional
     public void add(UserEntity userEntity){
-        database.getEntityManager().persist(userEntity);
+        database.getEM().getTransaction().begin();
+        database.getEM().persist(userEntity);
+        database.getEM().getTransaction().commit();
     }
 
     @Transactional
     public void modifyById(int id, UserEntity userEntity){
-        Query query = database.getEntityManager().createQuery(
+        Query query = database.getEM().createQuery(
                 "UPDATE UserEntity u SET " +
                         "u.username = :username, " +
                         "u.passwordSHA256 = :passwordSHA256 " +

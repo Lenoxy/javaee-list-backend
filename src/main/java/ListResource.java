@@ -29,7 +29,7 @@ public class ListResource{
     public List<ListDto> getListsForUser(@HeaderParam(HttpHeaders.AUTHORIZATION) String jwt){
         String username = jwtService.getUserName(jwt);
 
-        Query query = databaseService.getEntityManager().createQuery("SELECT l FROM ListEntity AS l WHERE l.owner.username = :username");
+        Query query = databaseService.getEM().createQuery("SELECT l FROM ListEntity AS l WHERE l.owner.username = :username");
         query.setParameter("username", username);
         List<ListEntity> listEntities = (List<ListEntity>) query.getResultList();
         return listEntities.stream().map(ListEntity::toListDto).collect(Collectors.toList());

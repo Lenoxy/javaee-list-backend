@@ -47,7 +47,6 @@ public class UserResource{
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response register(UserDto userDto){
-        // Not very clean implementation... TODO: Revisit
         if(! userDto.isValid() || userDto.getLists() != null){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }

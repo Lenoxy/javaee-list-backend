@@ -60,17 +60,17 @@ class UserRepositoryTest{
     @AfterEach
     void tearDown(){
         // Abusing the mock
-        databaseServiceMock.getEntityManager().getTransaction().begin();
-        databaseServiceMock.getEntityManager().createQuery("DELETE FROM UserEntity e").executeUpdate();
-        databaseServiceMock.getEntityManager().getTransaction().commit();
-        databaseServiceMock.getEntityManager().close();
+        databaseServiceMock.getEM().getTransaction().begin();
+        databaseServiceMock.getEM().createQuery("DELETE FROM UserEntity e").executeUpdate();
+        databaseServiceMock.getEM().getTransaction().commit();
+        databaseServiceMock.getEM().close();
     }
 
     @ParameterizedTest
     @MethodSource(value = "provideEntityManagers")
     void get(EntityManager entityManager){
         // This function cannot be called outside of the @Test scope
-        when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
+        when(databaseServiceMock.getEM()).thenReturn(entityManager);
 
         UserEntity expected = a.UserEntityBuilder().build();
 
@@ -90,7 +90,7 @@ class UserRepositoryTest{
     @MethodSource(value = "provideEntityManagers")
     void removeById(EntityManager entityManager){
         // This function cannot be called outside of the @Test scope
-        when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
+        when(databaseServiceMock.getEM()).thenReturn(entityManager);
 
         UserEntity expected = a.UserEntityBuilder().build();
         entityManager.getTransaction().begin();
@@ -110,7 +110,7 @@ class UserRepositoryTest{
     @MethodSource(value = "provideEntityManagers")
     void add(EntityManager entityManager){
         // This function cannot be called outside of the @Test scope
-        when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
+        when(databaseServiceMock.getEM()).thenReturn(entityManager);
 
         UserEntity expected = a.UserEntityBuilder().build();
 
@@ -125,7 +125,7 @@ class UserRepositoryTest{
     @MethodSource(value = "provideEntityManagers")
     void modifyById(EntityManager entityManager){
         // This function cannot be called outside of the @Test scope
-        when(databaseServiceMock.getEntityManager()).thenReturn(entityManager);
+        when(databaseServiceMock.getEM()).thenReturn(entityManager);
 
         UserEntity unchangedUserEntity = a.UserEntityBuilder().build();
         entityManager.getTransaction().begin();

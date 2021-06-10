@@ -11,7 +11,7 @@ public class DatabaseService{
     @PersistenceContext
     private EntityManager entityManager;
 
-    public EntityManager getEntityManager(){
+    public EntityManager getEM(){
         return entityManager;
     }
 }
