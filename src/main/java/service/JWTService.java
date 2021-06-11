@@ -38,7 +38,7 @@ public class JWTService{
         }
     }
 
-    public String getUserName(String jwt){
+    public String getUsername(String jwt){
         try{
             DecodedJWT decodedJWT = verifier.verify(jwt);
             return decodedJWT.getClaim("user").asString();

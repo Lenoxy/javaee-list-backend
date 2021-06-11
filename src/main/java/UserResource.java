@@ -1,4 +1,5 @@
 import dto.UserDto;
+import entity.UserEntity;
 import repository.UserRepository;
 import service.JWTService;
 
@@ -38,8 +39,8 @@ public class UserResource{
     }
 
     private boolean isCorrectCredentials(UserDto userDto){
-        UserDto responseUserDto = userRepository.getByUsernameAndPassword(userDto.getUsername(), userDto.getPasswordSHA256()).toUserDto();
-        return responseUserDto != null;
+        UserEntity responseUserEntity = userRepository.getByUsernameAndPassword(userDto.getUsername(), userDto.getPasswordSHA256());
+        return responseUserEntity != null;
     }
 
     @Path("/register")

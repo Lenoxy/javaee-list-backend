@@ -40,7 +40,7 @@ class JWTServiceTest{
     void getValidUser(){
         String jwt = sut.createJwt(a.UserDtoBuilder().withUsername("user").build());
 
-        String username = sut.getUserName(jwt);
+        String username = sut.getUsername(jwt);
 
         assertThat(username).isEqualTo("user");
     }

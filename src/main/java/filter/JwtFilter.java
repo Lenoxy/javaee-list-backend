@@ -21,7 +21,7 @@ public class JwtFilter implements ContainerRequestFilter{
 
     public void filter(ContainerRequestContext ctx){
         // TODO Extremly!!! insecure
-        if(! ctx.getUriInfo().getPath().contains("auth")){
+        if(!( ctx.getUriInfo().getPath().contains("auth") || ctx.getUriInfo().getPath().contains("openapi"))){
             String jwt = ctx.getHeaderString(HttpHeaders.AUTHORIZATION);
 
             if(jwt == null){
@@ -33,7 +33,7 @@ public class JwtFilter implements ContainerRequestFilter{
             }
 
             // Not necessary but cool
-            if(jwtService.getUserName(jwt) == null){
+            if(jwtService.getUsername(jwt) == null){
                 throw new UserClaimMissingException("The user claim is missing");
             }
         }

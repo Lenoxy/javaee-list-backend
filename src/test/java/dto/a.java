@@ -5,15 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 public class a{
-    private static UserDto userDto(int random){
-        return new UserDto(
-                random,
-                "c3d4856944538698d6cf217896afb58df4478e0f902a1c84bf897779c644deec",
-                String.valueOf(random),
-                listDtoList()
-        );
-    }
-
     private static List<ListDto> listDtoList(){
         List<ListDto> listDtoList = new ArrayList<>();
         listDtoList.add(ListDto());

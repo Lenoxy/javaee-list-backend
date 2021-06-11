@@ -69,7 +69,7 @@ class JwtFilterTest{
     void filterLoginWithUserClaimMissing(){
         when(uriInfoMock.getPath()).thenReturn("list");
         when(ctxMock.getHeaderString(HttpHeaders.AUTHORIZATION)).thenReturn("valid-bearer");
-        when(jwtServiceMock.getUserName("valid-bearer")).thenReturn(null);
+        when(jwtServiceMock.getUsername("valid-bearer")).thenReturn(null);
         when(jwtServiceMock.isJwtValid("valid-bearer")).thenReturn(true);
 
         assertThatThrownBy(
