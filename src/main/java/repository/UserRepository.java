@@ -6,7 +6,10 @@ import service.DatabaseService;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.Collections;
+import java.util.Optional;
 
 @EJB
 public class UserRepository{
@@ -45,10 +48,9 @@ public class UserRepository{
 
     }
 
+    @Transactional
     public void add(UserEntity userEntity){
-        database.getEM().getTransaction().begin();
         database.getEM().persist(userEntity);
-        database.getEM().getTransaction().commit();
     }
 
     @Transactional
@@ -64,5 +66,12 @@ public class UserRepository{
         if(query.executeUpdate() != 1){
             throw new RuntimeException("The user could not not be updated");
         }
+    }
+
+    @Transactional
+    public Optional<UserEntity> getByUsername(String username){
+        TypedQuery<UserEntity> query = database.getEM().createQuery("SELECT u FROM UserEntity u  WHERE u.username = :username", UserEntity.class);
+        query.setParameter("username", username);
+        return query.getResultStream().findFirst();
     }
 }

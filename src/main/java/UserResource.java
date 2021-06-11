@@ -52,7 +52,11 @@ public class UserResource{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        userRepository.add(userDto.toUserEntity());
+        if(!userRepository.getByUsername(userDto.getUsername()).isPresent()){
+            userRepository.add(userDto.toUserEntity());
+        }else{
+            Response.status(Response.Status.UNAUTHORIZED);
+        }
 
         // User is logged in automatically
         return Response

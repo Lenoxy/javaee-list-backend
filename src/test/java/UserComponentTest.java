@@ -5,6 +5,7 @@ import entity.UserEntity;
 import org.jboss.weld.junit5.EnableWeld;
 import org.jboss.weld.junit5.WeldInitiator;
 import org.jboss.weld.junit5.WeldSetup;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import repository.UserRepository;
@@ -31,6 +32,14 @@ class UserComponentTest{
             )
                     .setPersistenceContextFactory(i -> Persistence.createEntityManagerFactory(H2_PERSISTENCE_UNIT).createEntityManager())
                     .build();
+
+    @AfterEach
+    void afterEach(){
+        DatabaseService databaseService = weld.select(DatabaseService.class).get();
+        databaseService.getEM().getTransaction().begin();
+        databaseService.getEM().createQuery("DELETE FROM UserEntity u");
+        databaseService.getEM().getTransaction().commit();
+    }
 
     @Test
     @DisplayName("GIVEN valid user WHEN user is logging in THEN receive a jwt with the username claim set")
@@ -73,22 +82,6 @@ class UserComponentTest{
     }
 
     @Test
-    @DisplayName("GIVEN valid and not registered user WHEN user tries logging in THEN receive a unauthorized answer")
-    public void unauthorizedLoginComponentTest(){
-        UserResource sut = weld.select(UserResource.class).get();
-        UserDto expected = a.UserDtoBuilder()
-                .withId(1)
-                .withUsername("cave_johnson")
-                .withPasswordSHA256("EA52E694C48FC192C291E1EE5D4C879B2CCB622B77F25FC23E0E3CC586940669")
-                .withLists(null)
-                .build();
-
-        Response response = sut.login(expected);
-
-        assertThat(response.getStatus()).isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
-    }
-
-    @Test
     @DisplayName(
             "GIVEN new, valid and unregistered user " +
             "WHEN user is registering " +
@@ -105,8 +98,46 @@ class UserComponentTest{
                 .withLists(null)
                 .build();
 
-        // TODO: Use transaction here and not in production code
+        databaseService.getEM().getTransaction().begin();
         String jwt = (String) sut.register(expected).getEntity();
+        databaseService.getEM().getTransaction().commit();
+
+
+        assertThat(jwtService.isJwtValid(jwt)).isTrue();
+        assertThat(jwtService.getUsername(jwt)).isEqualTo("cave_johnson");
+        List<UserEntity> userEntitiesInDb = databaseService.getEM().createQuery("SELECT u FROM UserEntity u").getResultList();
+        assertThat(userEntitiesInDb.size()).isOne();
+        assertThat(userEntitiesInDb.get(0).toUserDto())
+                .usingRecursiveComparison()
+                .ignoringFields("lists")
+                .isEqualTo(expected);
+        assertThat(userEntitiesInDb.get(0).toUserDto().getLists()).isEmpty();
+
+    }
+
+    @Test
+    @DisplayName(
+            "GIVEN valid and registered user " +
+                    "WHEN user is registering " +
+                    "THEN receive the answer unauthorized"
+    )
+    void duplicateRegisterComponentTest(){
+        UserResource sut = weld.select(UserResource.class).get();
+        JWTService jwtService = weld.select(JWTService.class).get();
+        DatabaseService databaseService = weld.select(DatabaseService.class).get();
+        UserDto expected = a.UserDtoBuilder()
+                .withId(1)
+                .withUsername("cave_johnson")
+                .withPasswordSHA256("EA52E694C48FC192C291E1EE5D4C879B2CCB622B77F25FC23E0E3CC586940669")
+                .withLists(null)
+                .build();
+        databaseService.getEM().getTransaction().begin();
+        databaseService.getEM().persist(expected.toUserEntity());
+        databaseService.getEM().getTransaction().commit();
+
+        databaseService.getEM().getTransaction().begin();
+        String jwt = (String) sut.register(expected).getEntity();
+        databaseService.getEM().getTransaction().commit();
 
         assertThat(jwtService.isJwtValid(jwt)).isTrue();
         assertThat(jwtService.getUsername(jwt)).isEqualTo("cave_johnson");
