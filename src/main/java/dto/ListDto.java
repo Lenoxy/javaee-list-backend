@@ -1,10 +1,12 @@
 package dto;
 
 import entity.ListEntity;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 public class ListDto{
     private int id;
     private String title;
@@ -25,29 +27,5 @@ public class ListDto{
                 title,
                 items.stream().map(ItemDto::toItemEntity).collect(Collectors.toList())
         );
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public void setId(int id){
-        this.id = id;
-    }
-
-    public String getTitle(){
-        return title;
-    }
-
-    public void setTitle(String title){
-        this.title = title;
-    }
-
-    public List<ItemDto> getItems(){
-        return items;
-    }
-
-    public void setItems(List<ItemDto> items){
-        this.items = items;
     }
 }

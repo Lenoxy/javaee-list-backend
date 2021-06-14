@@ -1,11 +1,13 @@
 package entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dto.ItemDto;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "list_item")
 public class ItemEntity{
@@ -30,25 +32,5 @@ public class ItemEntity{
 
     public ItemDto toItemDto(){
         return new ItemDto(id, content);
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public ListEntity getList(){
-        return list;
-    }
-
-    public void setList(ListEntity list){
-        this.list = list;
-    }
-
-    public String getContent(){
-        return content;
-    }
-
-    public void setContent(String content){
-        this.content = content;
     }
 }

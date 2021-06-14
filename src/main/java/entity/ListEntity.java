@@ -1,6 +1,7 @@
 package entity;
 
 import dto.ListDto;
+import lombok.Getter;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 @Entity
 @Table(name = "list_list")
 public class ListEntity{
@@ -62,22 +64,6 @@ public class ListEntity{
     @JsonbTransient
     public void setOwner(UserEntity owner){
         this.owner = owner;
-    }
-
-    public String getTitle(){
-        return title;
-    }
-
-    public void setTitle(String title){
-        this.title = title;
-    }
-
-    public List<ItemEntity> getItems(){
-        return items;
-    }
-
-    public void setItems(List<ItemEntity> items){
-        this.items = items;
     }
 
     public void addItem(ItemEntity item){

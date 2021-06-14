@@ -1,11 +1,15 @@
 package dto;
 
 import entity.UserEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 public class UserDto{
 
     private int id;
@@ -42,37 +46,5 @@ public class UserDto{
                 passwordSHA256,
                 lists != null ? lists.stream().map(ListDto::toListEntity).collect(Collectors.toList()) : null
         );
-    }
-
-    public String getUsername(){
-        return username;
-    }
-
-    public void setUsername(String username){
-        this.username = username;
-    }
-
-    public String getPasswordSHA256(){
-        return passwordSHA256;
-    }
-
-    public void setPasswordSHA256(String passwordSHA256){
-        this.passwordSHA256 = passwordSHA256;
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public void setId(int id){
-        this.id = id;
-    }
-
-    public List<ListDto> getLists(){
-        return lists;
-    }
-
-    public void setLists(List<ListDto> lists){
-        this.lists = lists;
     }
 }

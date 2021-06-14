@@ -1,7 +1,9 @@
 package dto;
 
 import entity.ItemEntity;
+import lombok.Getter;
 
+@Getter
 public class ItemDto{
     private int id;
     private String content;
@@ -16,21 +18,5 @@ public class ItemDto{
 
     public ItemEntity toItemEntity(){
         return new ItemEntity(id, content);
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public void setId(int id){
-        this.id = id;
-    }
-
-    public String getContent(){
-        return content;
-    }
-
-    public void setContent(String content){
-        this.content = content;
     }
 }

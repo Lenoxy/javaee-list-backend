@@ -33,7 +33,6 @@ public class ListResource{
         query.setParameter("username", username);
         List<ListEntity> listEntities = query.getResultList();
         return listEntities.stream().map(ListEntity::toListDto).collect(Collectors.toList());
-
     }
 
 }

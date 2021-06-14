@@ -1,12 +1,16 @@
 package entity;
 
 import dto.UserDto;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "list_user")
 public class UserEntity{
@@ -50,36 +54,8 @@ public class UserEntity{
         );
     }
 
-    public List<ListEntity> getLists(){
-        return lists;
-    }
-
-    public void setLists(List<ListEntity> lists){
-        this.lists = lists;
-    }
-
     public void addListEntity(ListEntity listEntity){
         this.lists.add(listEntity);
         listEntity.setOwner(this);
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public String getUsername(){
-        return username;
-    }
-
-    public void setUsername(String username){
-        this.username = username;
-    }
-
-    public String getPasswordSHA256(){
-        return passwordSHA256;
-    }
-
-    public void setPasswordSHA256(String passwordSHA256){
-        this.passwordSHA256 = passwordSHA256;
     }
 }
