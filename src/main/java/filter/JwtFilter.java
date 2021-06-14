@@ -9,19 +9,23 @@ import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
+import javax.ws.rs.container.ResourceInfo;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.ext.Provider;
+import java.lang.reflect.Method;
 
 @Provider
-@PreMatching
 public class JwtFilter implements ContainerRequestFilter{
     @Inject
     JWTService jwtService;
 
+    @Context
+    private ResourceInfo resourceInfo;
 
     public void filter(ContainerRequestContext ctx){
-        // TODO Extremly!!! insecure
-        if(!( ctx.getUriInfo().getPath().contains("auth") || ctx.getUriInfo().getPath().contains("openapi"))){
+        Method resourceMethod = resourceInfo.getResourceMethod();
+        if(resourceMethod.isAnnotationPresent(RequiresLogin.class)){
             String jwt = ctx.getHeaderString(HttpHeaders.AUTHORIZATION);
 
             if(jwt == null){

@@ -1,5 +1,6 @@
 import dto.ListDto;
 import entity.ListEntity;
+import filter.RequiresLogin;
 import service.DatabaseService;
 import service.JWTService;
 
@@ -26,6 +27,7 @@ public class ListResource{
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
+    @RequiresLogin
     public List<ListDto> getListsForUser(@HeaderParam(HttpHeaders.AUTHORIZATION) String jwt){
         String username = jwtService.getUsername(jwt);
 

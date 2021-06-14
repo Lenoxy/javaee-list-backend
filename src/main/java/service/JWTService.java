@@ -12,7 +12,8 @@ import javax.ejb.EJB;
 @EJB
 public class JWTService{
     private final String ISSUER = "list-backend";
-    private final Algorithm ALGORITHM = Algorithm.HMAC256("very_secret"); // TODO
+    // This is a test project and should never be used productively!
+    private final Algorithm ALGORITHM = Algorithm.HMAC256("very_secret");
 
     private final JWTVerifier verifier = JWT.require(ALGORITHM)
             .withIssuer(ISSUER)
