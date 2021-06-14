@@ -1,4 +1,3 @@
-import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpStatus;
 import dto.UserDto;
 import dto.a;
 import entity.UserEntity;
@@ -10,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import repository.UserRepository;
 import service.DatabaseService;
-import service.JWTService;
+import service.JwtService;
 
 import javax.persistence.Persistence;
 import javax.ws.rs.core.Response;
@@ -26,7 +25,7 @@ class UserComponentTest{
     private final WeldInitiator weld =
             WeldInitiator.from(
                     UserResource.class,
-                    JWTService.class,
+                    JwtService.class,
                     UserRepository.class,
                     DatabaseService.class
             )
@@ -45,7 +44,7 @@ class UserComponentTest{
     @DisplayName("GIVEN valid user WHEN user is logging in THEN receive a jwt with the username claim set")
     public void loginComponentTest(){
         UserResource sut = weld.select(UserResource.class).get();
-        JWTService jwtService = weld.select(JWTService.class).get();
+        JwtService jwtService = weld.select(JwtService.class).get();
         DatabaseService databaseService = weld.select(DatabaseService.class).get();
         UserDto expected = a.UserDtoBuilder()
                 .withId(1)
@@ -89,7 +88,7 @@ class UserComponentTest{
     )
     void registerComponentTest(){
         UserResource sut = weld.select(UserResource.class).get();
-        JWTService jwtService = weld.select(JWTService.class).get();
+        JwtService jwtService = weld.select(JwtService.class).get();
         DatabaseService databaseService = weld.select(DatabaseService.class).get();
         UserDto expected = a.UserDtoBuilder()
                 .withId(1)
@@ -123,7 +122,7 @@ class UserComponentTest{
     )
     void duplicateRegisterComponentTest(){
         UserResource sut = weld.select(UserResource.class).get();
-        JWTService jwtService = weld.select(JWTService.class).get();
+        JwtService jwtService = weld.select(JwtService.class).get();
         DatabaseService databaseService = weld.select(DatabaseService.class).get();
         UserDto expected = a.UserDtoBuilder()
                 .withId(1)

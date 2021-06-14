@@ -18,7 +18,7 @@ public class UserEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "username")
     private String username;
@@ -36,7 +36,7 @@ public class UserEntity{
     public UserEntity(){
     }
 
-    public UserEntity(int id, String username, String passwordSHA256, List<ListEntity> listEntities){
+    public UserEntity(Integer id, String username, String passwordSHA256, List<ListEntity> listEntities){
         this.id = id;
         this.username = username;
         this.passwordSHA256 = passwordSHA256;

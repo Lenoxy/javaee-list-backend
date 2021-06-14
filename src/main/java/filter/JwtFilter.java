@@ -3,12 +3,11 @@ package filter;
 import exception.BearerInvalidException;
 import exception.BearerMissingException;
 import exception.UserClaimMissingException;
-import service.JWTService;
+import service.JwtService;
 
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -18,7 +17,7 @@ import java.lang.reflect.Method;
 @Provider
 public class JwtFilter implements ContainerRequestFilter{
     @Inject
-    JWTService jwtService;
+    JwtService jwtService;
 
     @Context
     private ResourceInfo resourceInfo;

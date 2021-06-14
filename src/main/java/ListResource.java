@@ -1,15 +1,11 @@
 import dto.ListDto;
 import entity.ListEntity;
 import filter.RequiresLogin;
-import service.DatabaseService;
-import service.JWTService;
+import repository.ListRepository;
+import service.JwtService;
 
 import javax.inject.Inject;
-import javax.persistence.Query;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -19,22 +15,33 @@ import java.util.stream.Collectors;
 public class ListResource{
 
     @Inject
-    JWTService jwtService;
+    JwtService jwtService;
 
     @Inject
-    DatabaseService databaseService;
+    ListRepository listRepository;
 
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresLogin
     public List<ListDto> getListsForUser(@HeaderParam(HttpHeaders.AUTHORIZATION) String jwt){
-        String username = jwtService.getUsername(jwt);
+        return listRepository
+                .getListByUserId(jwtService.getId(jwt))
+                .stream()
+                .map(ListEntity::toListDto)
+                .collect(Collectors.toList());
+    }
 
-        Query query = databaseService.getEM().createQuery("SELECT l FROM ListEntity AS l WHERE l.owner.username = :username");
-        query.setParameter("username", username);
-        List<ListEntity> listEntities = query.getResultList();
-        return listEntities.stream().map(ListEntity::toListDto).collect(Collectors.toList());
+    @POST
+    @Path("")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @RequiresLogin
+    public void addList(
+            String title,
+            @HeaderParam(HttpHeaders.AUTHORIZATION) String jwt
+    ){
+        listRepository.addList(jwtService.getId(jwt), title);
+
     }
 
 }

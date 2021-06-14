@@ -1,7 +1,7 @@
 import dto.UserDto;
 import entity.UserEntity;
 import repository.UserRepository;
-import service.JWTService;
+import service.JwtService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 public class UserResource{
 
     @Inject
-    private JWTService jwtService;
+    private JwtService jwtService;
 
     @Inject
     private UserRepository userRepository;
@@ -40,7 +40,12 @@ public class UserResource{
 
     private boolean isCorrectCredentials(UserDto userDto){
         UserEntity responseUserEntity = userRepository.getByUsernameAndPassword(userDto.getUsername(), userDto.getPasswordSHA256());
-        return responseUserEntity != null;
+        if(responseUserEntity != null){
+            userDto.setId(responseUserEntity.getId());
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Path("/register")
@@ -53,7 +58,7 @@ public class UserResource{
         }
 
         if(!userRepository.getByUsername(userDto.getUsername()).isPresent()){
-            userRepository.add(userDto.toUserEntity());
+            userDto.setId(userRepository.add(userDto.toUserEntity()));
         }else{
             Response.status(Response.Status.UNAUTHORIZED);
         }

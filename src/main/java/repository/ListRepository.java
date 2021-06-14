@@ -8,22 +8,30 @@ import service.DatabaseService;
 
 import javax.inject.Inject;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.util.List;
 
 public class ListRepository{
     @Inject
     DatabaseService database;
 
-    public List<ListDto> getListByUserId(UserDto user){
-        Query query = database.getEM().createQuery("SELECT l FROM ListEntity AS l " +
-                "WHERE l.owner = :ownerId");
-        query.setParameter("ownerId", user.toUserEntity());
-        return (List<ListDto>) query.getResultList();
+    @Inject
+    UserRepository userRepository;
+
+    public List<ListEntity> getListByUserId(Integer ownerId){
+        UserEntity ownerUserEntity = userRepository.getById(ownerId);
+        TypedQuery<ListEntity> query = database.getEM().createQuery("SELECT l FROM ListEntity AS l " +
+                "WHERE l.owner = :ownerId",
+                ListEntity.class
+        );
+        query.setParameter("ownerId", ownerUserEntity);
+        return query.getResultList();
     }
 
-    public void addList(UserDto owner, String listTitle){
-        UserEntity userEntity = owner.toUserEntity();
-
+    @Transactional
+    public void addList(Integer ownerId, String listTitle){
+        UserEntity userEntity = userRepository.getById(ownerId);
         userEntity.addListEntity(new ListEntity(listTitle));
         database.getEM().persist(userEntity);
     }

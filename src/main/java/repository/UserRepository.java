@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import java.util.Collections;
+import javax.ws.rs.NotFoundException;
 import java.util.Optional;
 
 @EJB
@@ -44,13 +44,27 @@ public class UserRepository{
 
         if(rowsAffected != 1){
             database.getEM().getTransaction().rollback();
+            throw new IllegalStateException();
         }
 
     }
 
     @Transactional
-    public void add(UserEntity userEntity){
+    public UserEntity getById(int id){
+        TypedQuery<UserEntity> q = database.getEM().createQuery(
+                "SELECT u FROM UserEntity u " +
+                        "WHERE u.id = :id ",
+                UserEntity.class
+        );
+        q.setParameter("id", id);
+        return q.getResultStream().findFirst().orElseThrow(NotFoundException::new);
+    }
+
+    @Transactional
+    public Integer add(UserEntity userEntity){
         database.getEM().persist(userEntity);
+        database.getEM().flush();
+        return userEntity.getId();
     }
 
     @Transactional

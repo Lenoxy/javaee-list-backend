@@ -9,7 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import service.JWTService;
+import service.JwtService;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
@@ -28,7 +28,7 @@ class JwtFilterTest{
     private UriInfo uriInfoMock;
 
     @Mock
-    private JWTService jwtServiceMock;
+    private JwtService jwtServiceMock;
 
     @InjectMocks
     private JwtFilter sut;

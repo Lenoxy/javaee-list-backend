@@ -12,13 +12,13 @@ import java.util.stream.Collectors;
 @Setter
 public class UserDto{
 
-    private int id;
+    private Integer id;
     private String username;
     private String passwordSHA256;
     private List<ListDto> lists;
 
 
-    public UserDto(int id, String passwordSHA256, String username, List<ListDto> lists){
+    public UserDto(Integer id, String passwordSHA256, String username, List<ListDto> lists){
         this.id = id;
         this.passwordSHA256 = passwordSHA256;
         this.username = username;
