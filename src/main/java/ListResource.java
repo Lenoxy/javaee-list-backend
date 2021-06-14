@@ -5,6 +5,7 @@ import repository.ListRepository;
 import service.JwtService;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -24,6 +25,7 @@ public class ListResource{
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     @RequiresLogin
+    @Transactional
     public List<ListDto> getListsForUser(@HeaderParam(HttpHeaders.AUTHORIZATION) String jwt){
         return listRepository
                 .getListByUserId(jwtService.getId(jwt))
@@ -36,6 +38,7 @@ public class ListResource{
     @Path("")
     @Consumes(MediaType.TEXT_PLAIN)
     @RequiresLogin
+    @Transactional
     public void addList(
             String title,
             @HeaderParam(HttpHeaders.AUTHORIZATION) String jwt

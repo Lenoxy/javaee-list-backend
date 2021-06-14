@@ -29,13 +29,14 @@ public class ListRepository{
         return query.getResultList();
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.MANDATORY)
     public void addList(Integer ownerId, String listTitle){
         UserEntity userEntity = userRepository.getById(ownerId);
         userEntity.addListEntity(new ListEntity(listTitle));
         database.getEM().persist(userEntity);
     }
 
+    @Transactional(Transactional.TxType.MANDATORY)
     public void removeList(ListDto listDto){
         Query query = database.getEM().createQuery("DELETE FROM ListEntity l  WHERE l.id = :id");
         query.setParameter("id", listDto.toListEntity().getId());

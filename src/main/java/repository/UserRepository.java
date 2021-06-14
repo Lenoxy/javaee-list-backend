@@ -16,24 +16,20 @@ public class UserRepository{
     @Inject
     DatabaseService database;
 
-    @Transactional
     public UserEntity getByUsernameAndPassword(String username, String passwordSHA256){
-        Query q = database.getEM().createQuery(
+        TypedQuery<UserEntity> q = database.getEM().createQuery(
                 "SELECT u FROM UserEntity AS u " +
                         "WHERE u.username = :username AND " +
-                        "u.passwordSHA256 = :passwordSHA256"
+                        "u.passwordSHA256 = :passwordSHA256",
+                UserEntity.class
         );
         q.setParameter("username", username);
         q.setParameter("passwordSHA256", passwordSHA256);
 
-        if(q.getResultList().size() == 1){
-            return (UserEntity) q.getSingleResult();
-        }else{
-            return null;
-        }
+        return q.getResultStream().findFirst().orElseThrow(NotFoundException::new);
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.MANDATORY)
     public void removeById(int id){
         Query q = database.getEM().createQuery(
                 "DELETE FROM UserEntity as u " +
@@ -49,7 +45,7 @@ public class UserRepository{
 
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.MANDATORY)
     public UserEntity getById(int id){
         TypedQuery<UserEntity> q = database.getEM().createQuery(
                 "SELECT u FROM UserEntity u " +
@@ -60,14 +56,14 @@ public class UserRepository{
         return q.getResultStream().findFirst().orElseThrow(NotFoundException::new);
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.MANDATORY)
     public Integer add(UserEntity userEntity){
         database.getEM().persist(userEntity);
         database.getEM().flush();
         return userEntity.getId();
     }
 
-    @Transactional
+    @Transactional(Transactional.TxType.MANDATORY)
     public void modifyById(int id, UserEntity userEntity){
         Query query = database.getEM().createQuery(
                 "UPDATE UserEntity u SET " +
@@ -82,7 +78,6 @@ public class UserRepository{
         }
     }
 
-    @Transactional
     public Optional<UserEntity> getByUsername(String username){
         TypedQuery<UserEntity> query = database.getEM().createQuery("SELECT u FROM UserEntity u  WHERE u.username = :username", UserEntity.class);
         query.setParameter("username", username);

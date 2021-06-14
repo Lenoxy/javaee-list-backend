@@ -5,6 +5,7 @@ import service.JwtService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,6 +24,7 @@ public class UserResource{
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
+    @Transactional
     public Response login(UserDto userDto){
         if(! userDto.isValid()){
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -52,12 +54,13 @@ public class UserResource{
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
+    @Transactional
     public Response register(UserDto userDto){
         if(! userDto.isValid() || userDto.getLists() != null){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        if(!userRepository.getByUsername(userDto.getUsername()).isPresent()){
+        if(! userRepository.getByUsername(userDto.getUsername()).isPresent()){
             userDto.setId(userRepository.add(userDto.toUserEntity()));
         }else{
             Response.status(Response.Status.UNAUTHORIZED);
