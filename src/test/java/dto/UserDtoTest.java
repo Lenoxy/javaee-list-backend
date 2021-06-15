@@ -14,7 +14,6 @@ class UserDtoTest{
 
         assertThat(sut).usingRecursiveComparison().isEqualTo(actual);
 
-
     }
 
     @Test
