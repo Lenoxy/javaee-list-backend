@@ -1,6 +1,7 @@
 import dto.UserDto;
 import entity.UserEntity;
 import repository.UserRepository;
+import service.DatabaseService;
 import service.JwtService;
 
 import javax.inject.Inject;
@@ -19,6 +20,7 @@ public class UserResource{
 
     @Inject
     private UserRepository userRepository;
+
 
     @Path("/login")
     @PUT

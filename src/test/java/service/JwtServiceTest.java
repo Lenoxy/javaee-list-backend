@@ -11,14 +11,14 @@ class JwtServiceTest{
 
     @Test
     void createJwt(){
-        String jwt = sut.createJwt(a.UserDtoBuilder().withUsername("user").build());
+        String jwt = sut.createJwt(a.UserDtoBuilder().withUsername("user").withId(2).build());
 
-        assertThat(jwt).isEqualTo("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsaXN0LWJhY2tlbmQiLCJ1c2VyIjoidXNlciJ9.1dozPe8laiqDo1GWBEZJwUxqkYrSI8LUpdSI8RwJRkQ");
+        assertThat(jwt).isEqualTo("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsaXN0LWJhY2tlbmQiLCJpZCI6MiwidXNlciI6InVzZXIifQ.CDMkMXAZIltDlYT-s7nU2reMXW6ytIwfBz4R8bGsQAk");
     }
 
     @Test
     void isJwtValidHappyCase(){
-        String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsaXN0LWJhY2tlbmQiLCJ1c2VyIjoidXNlciJ9.1dozPe8laiqDo1GWBEZJwUxqkYrSI8LUpdSI8RwJRkQ";
+        String jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsaXN0LWJhY2tlbmQiLCJpZCI6MiwidXNlciI6InVzZXIifQ.CDMkMXAZIltDlYT-s7nU2reMXW6ytIwfBz4R8bGsQAk";
 
         boolean isValid = sut.isJwtValid(jwt);
 
@@ -40,7 +40,7 @@ class JwtServiceTest{
     void getValidUser(){
         String jwt = sut.createJwt(a.UserDtoBuilder().withUsername("user").build());
 
-        String username = sut.getUsername(jwt);
+        String username = sut.decode(jwt).getUser();
 
         assertThat(username).isEqualTo("user");
     }

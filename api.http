@@ -9,7 +9,7 @@ Accept: *
 Authorization: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJsaXN0LWJhY2tlbmQiLCJpZCI6MSwidXNlciI6InRlc3RsaTIifQ.M4J2D7V4Fa9nCz70wc0bjO5fR9vHQH7rqtdZEb-0SVI
 Content-Type: text/plain
 
-Hello world
+List 2
 
 ###
 
@@ -17,7 +17,7 @@ POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 
 {
-  "username": "testli2",
+  "username": "testli",
   "passwordSHA256": "490d189e7a0d9bdaf45159ffa04d677b5bba750085a71d8398484b26939fe52b"
 }
 
@@ -27,7 +27,7 @@ PUT http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "testli2",
+  "username": "testli",
   "passwordSHA256": "490d189e7a0d9bdaf45159ffa04d677b5bba750085a71d8398484b26939fe52b"
 }
 

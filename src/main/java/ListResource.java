@@ -28,7 +28,7 @@ public class ListResource{
     @Transactional
     public List<ListDto> getListsForUser(@HeaderParam(HttpHeaders.AUTHORIZATION) String jwt){
         return listRepository
-                .getListByUserId(jwtService.getId(jwt))
+                .getListByUserId(jwtService.decode(jwt).getId())
                 .stream()
                 .map(ListEntity::toListDto)
                 .collect(Collectors.toList());
@@ -43,7 +43,7 @@ public class ListResource{
             String title,
             @HeaderParam(HttpHeaders.AUTHORIZATION) String jwt
     ){
-        listRepository.addList(jwtService.getId(jwt), title);
+        listRepository.addList(jwtService.decode(jwt).getId(), title);
 
     }
 

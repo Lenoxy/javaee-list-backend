@@ -3,6 +3,7 @@ package filter;
 import exception.BearerInvalidException;
 import exception.BearerMissingException;
 import exception.UserClaimMissingException;
+import service.Jwt;
 import service.JwtService;
 
 import javax.inject.Inject;
@@ -25,18 +26,18 @@ public class JwtFilter implements ContainerRequestFilter{
     public void filter(ContainerRequestContext ctx){
         Method resourceMethod = resourceInfo.getResourceMethod();
         if(resourceMethod.isAnnotationPresent(RequiresLogin.class)){
-            String jwt = ctx.getHeaderString(HttpHeaders.AUTHORIZATION);
+            String jwtString = ctx.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-            if(jwt == null){
+            if(jwtString == null){
                 throw new BearerMissingException("Bearer is missing");
             }
 
-            if(! jwtService.isJwtValid(jwt)){
+            if(! jwtService.isJwtValid(jwtString)){
                 throw new BearerInvalidException("The JWT is invalid");
             }
 
             // Not necessary but cool
-            if(jwtService.getUsername(jwt) == null){
+            if(jwtService.decode(jwtString).getUser() == null){
                 throw new UserClaimMissingException("The user claim is missing");
             }
         }

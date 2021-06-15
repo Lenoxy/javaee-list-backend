@@ -21,9 +21,6 @@ public class JwtService{
             .withClaimPresence("id")
             .build();
 
-    public JwtService(){
-    }
-
     public String createJwt(UserDto userDto){
         return JWT.create()
                 .withIssuer(ISSUER)
@@ -41,23 +38,13 @@ public class JwtService{
         }
     }
 
-    public String getUsername(String jwt){
-        try{
-            DecodedJWT decodedJWT = verifier.verify(jwt);
-            return decodedJWT.getClaim("user").asString();
-        }catch(JWTVerificationException e){
-            e.printStackTrace();
-            return null;
-        }
-    }
+    public Jwt decode(String jwt){
+        DecodedJWT decodedJWT = verifier.verify(jwt);
+        return new Jwt(
+                decodedJWT.getIssuer(),
+                decodedJWT.getClaim("user").asString(),
+                decodedJWT.getClaim("id").asInt()
+        );
 
-    public Integer getId(String jwt){
-        try{
-            DecodedJWT decodedJWT = verifier.verify(jwt);
-            return decodedJWT.getClaim("id").asInt();
-        }catch(JWTVerificationException e){
-            e.printStackTrace();
-            return null;
-        }
     }
 }

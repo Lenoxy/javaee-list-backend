@@ -49,7 +49,7 @@ public class a{
     }
 
     public static class UserDtoBuilder{
-        private int id;
+        private Integer id;
         private String passwordSHA256;
         private String username;
         private List<ListDto> lists;
@@ -61,7 +61,7 @@ public class a{
             this.lists = listDtoList();
         }
 
-        public UserDtoBuilder withId(int id){
+        public UserDtoBuilder withId(Integer id){
             this.id = id;
             return this;
         }

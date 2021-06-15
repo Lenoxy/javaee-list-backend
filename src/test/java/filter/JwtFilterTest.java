@@ -3,12 +3,12 @@ package filter;
 import exception.BearerInvalidException;
 import exception.BearerMissingException;
 import exception.UserClaimMissingException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import service.Jwt;
 import service.JwtService;
 
 import javax.ws.rs.container.ContainerRequestContext;
@@ -16,6 +16,7 @@ import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.HttpHeaders;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,9 +64,10 @@ class JwtFilterTest{
     @Test
     void filterLoginWithUserClaimMissing(){
         mockMethodAnnotatedWithLoginRequired(true);
+        Jwt jwt = mock(Jwt.class);
         when(ctxMock.getHeaderString(HttpHeaders.AUTHORIZATION)).thenReturn("valid-bearer");
-        when(jwtServiceMock.getUsername("valid-bearer")).thenReturn(null);
         when(jwtServiceMock.isJwtValid("valid-bearer")).thenReturn(true);
+        when(jwtServiceMock.decode("valid-bearer")).thenReturn(jwt);
 
         assertThatThrownBy(
                 () -> sut.filter(ctxMock)
